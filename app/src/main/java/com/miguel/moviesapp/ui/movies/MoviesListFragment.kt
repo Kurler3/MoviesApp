@@ -1,4 +1,4 @@
-package com.miguel.moviesapp.ui
+package com.miguel.moviesapp.ui.movies
 
 import androidx.fragment.app.Fragment
 import com.miguel.moviesapp.R
