@@ -1,40 +1,30 @@
-package com.miguel.moviesapp.data
+package com.miguel.moviesapp.data.pagingsource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.miguel.moviesapp.api.MovieAPI
+import com.miguel.moviesapp.data.Movie
 import retrofit2.HttpException
 import java.io.IOException
 
-private const val STARTING_PAGE_INDEX = 1
 
-class MoviesPagingSource(
+class MoviesPagingSourceTitle(
     private val movieApi:MovieAPI,
-    private val query: String,
-    private val language : String?,
-    private val includeAdult: Boolean?,
-    private val region: String?,
-    private val year: Int?,
-    private val primaryReleaseYear: Int?
+    private val query: String
 ) : PagingSource<Int, Movie>(){
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
-        val position = params.key ?: STARTING_PAGE_INDEX
+        val position = params.key ?: PagingSourceConstants.STARTING_PAGE_INDEX
 
         return try {
             val response = movieApi.searchMovies( MovieAPI.CLIENT_ID,
                 query,
-                position,
-                language,
-                includeAdult,
-                region,
-                year,
-                primaryReleaseYear)
+                position)
 
             val movies = response.results
 
             LoadResult.Page(
                 data = movies,
-                prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,
+                prevKey = if (position == PagingSourceConstants.STARTING_PAGE_INDEX) null else position - 1,
                 nextKey = if(movies.isEmpty()) null else position + 1
             )
 

@@ -22,7 +22,9 @@ android {
 
         buildConfigField("String", "MOVIES_API_ACCESS_KEY", movies_api_access_key)
     }
-
+    kapt {
+        generateStubs = true
+    }
     buildTypes {
         release {
             minifyEnabled false

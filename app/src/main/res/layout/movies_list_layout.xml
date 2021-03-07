@@ -4,14 +4,15 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.movies.MoviesListFragment">
+    tools:context=".ui.movies.MoviesListFragment"
+    android:padding="12dp">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movies_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/movie_item_layout"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-
+        app:spanCount="3"
         />
 
     <ProgressBar
