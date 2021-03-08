@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.miguel.moviesapp.api.MovieQuery
+import com.miguel.moviesapp.api.MovieFilter
 import com.miguel.moviesapp.data.MoviesRepository
 
 class MoviesViewModel @ViewModelInject constructor(
@@ -17,17 +17,17 @@ class MoviesViewModel @ViewModelInject constructor(
 
     // Using MutableLiveData switchMap means that photos will change whenever the value of currentQuery changes. Can be thought
     // of like a listener for mutable live data
-    val movies = currentQuery.switchMap {   query ->
+    val movies = currentQuery.switchMap { filter ->
         // Have to cache the live data otherwise the app will crash when rotating
         // because cant load from the same page data twice
-        movieRepository.getPopularMovies().cachedIn(viewModelScope)
+        movieRepository.search(filter).cachedIn(viewModelScope)
     }
 
-    fun searchMovies(movieQuery: String){
-        currentQuery.value = movieQuery
+    fun searchMovies(filter: MovieFilter){
+        currentQuery.value = filter
     }
 
     companion object {
-        private val DEFAULT_QUERY = "Superman"
+        private val DEFAULT_QUERY = MovieFilter("", "", "")
     }
 }

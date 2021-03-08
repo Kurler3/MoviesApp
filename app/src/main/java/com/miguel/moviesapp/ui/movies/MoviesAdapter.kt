@@ -21,7 +21,7 @@ class MoviesAdapter : PagingDataAdapter<Movie, MoviesAdapter.MovieViewHolder>(
         fun bind(movie : Movie){
             binding.apply {
                 Glide.with(itemView)
-                    .load(movie.posterPath)
+                    .load(movie.posterURL)
                     .centerCrop()
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error)
