@@ -25,37 +25,9 @@ class MainActivity : AppCompatActivity() {
                 .findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        setSupportActionBar(toolbar)
 
-        setupActionBarWithNavController(navController)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return super.onSupportNavigateUp() || navController.navigateUp()
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
 
-        menuInflater.inflate(R.menu.toolbar_menu_layout, menu)
-
-        // Access the search view
-        val searchItem = menu?.findItem(R.id.search_menu_item)
-
-        val searchView = searchItem?.actionView as SearchView
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if(query!=null){
-                    .recyclerView.scrollToPosition(0)
-
-                }
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
 }
