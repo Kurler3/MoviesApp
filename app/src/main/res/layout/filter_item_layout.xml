@@ -4,9 +4,11 @@
     android:layout_height="50dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
-    android:background="@color/dark_grey">
+    android:background="@color/dark_grey"
+    android:layout_marginLeft="12dp">
 
     <TextView
+        android:id="@+id/filter_value_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="English"

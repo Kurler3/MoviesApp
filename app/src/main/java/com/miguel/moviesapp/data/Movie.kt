@@ -9,13 +9,14 @@ data class Movie (
     val title: String,
     val poster_path: String?,
     val overview: String,
-    val releaseDate: String,
-    val genreIds: Array<Int>,
-    val originalLanguage: String,
+    val release_date: String,
+    val genre_ids: Array<Int>,
+    val original_language: String,
     val popularity: Float,
     val vote_average: Float,
-    val hasVideo: Boolean,
-    val isAdult: Boolean
+    val has_video: Boolean,
+    val region: String,
+    val include_adult: Boolean
     ) : Parcelable {
         val posterURL get() = "https://image.tmdb.org/t/p/original${poster_path}"
     }

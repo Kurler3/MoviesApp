@@ -28,6 +28,7 @@ class MoviesViewModel @ViewModelInject constructor(
     }
 
     companion object {
-        private val DEFAULT_QUERY = MovieFilter("", "", "")
+        private val DEFAULT_QUERY = MovieFilter(null, null,
+        null, null, null)
     }
 }

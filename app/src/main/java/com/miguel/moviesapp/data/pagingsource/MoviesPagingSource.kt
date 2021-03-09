@@ -43,26 +43,10 @@ class MoviesPagingSource(
     }
 
     private suspend fun searchFilter(filter : MovieFilter, position : Int) : MovieApiResponse {
-        return when (filter.type) {
-            MovieFilter.TITLE_FILTER ->
-                movieApi.searchMovies(MovieAPI.CLIENT_ID, filter.query, position)
-
-            MovieFilter.LANGUAGE_FILTER ->
-                movieApi.searchMoviesByLanguage(MovieAPI.CLIENT_ID, filter.query, position, filter.filterValue)
-
-            MovieFilter.ADULT_FILTER ->
-                movieApi.searchMoviesByBeingAdult(MovieAPI.CLIENT_ID, filter.query, position, filter.filterValue == "true")
-
-            MovieFilter.REGION_FILTER ->
-                movieApi.searchMoviesByRegion(MovieAPI.CLIENT_ID, filter.query, position, filter.filterValue)
-
-            MovieFilter.YEAR_FILTER ->
-                movieApi.searchMoviesByYear(MovieAPI.CLIENT_ID, filter.query, position, filter.filterValue.toInt())
-
-            MovieFilter.RELEASE_YEAR_FILTER ->
-                movieApi.searchMoviesByReleaseYear(MovieAPI.CLIENT_ID, filter.query, position, filter.filterValue.toInt())
-
-            else -> movieApi.searchPopular(MovieAPI.CLIENT_ID, position)
+        if(filter.query==null){
+            return movieApi.searchPopular(MovieAPI.CLIENT_ID, position)
         }
+        return movieApi.searchMovies(MovieAPI.CLIENT_ID,
+        filter.query, position, filter.language, filter.includeAdult, filter.country, filter.year)
     }
 }

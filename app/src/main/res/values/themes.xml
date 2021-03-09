@@ -17,4 +17,7 @@
         <item name="colorPrimary">@color/grey</item>
         <item name="colorOnPrimary">@color/white</item>
     </style>
+    <style name="YellowBtnStyle">
+        <item name="colorPrimary">@color/yellow</item>
+    </style>
 </resources>

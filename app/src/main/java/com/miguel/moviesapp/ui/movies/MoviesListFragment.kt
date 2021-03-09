@@ -14,7 +14,6 @@ import com.miguel.moviesapp.R
 import com.miguel.moviesapp.api.MovieFilter
 import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.movies_list_layout.*
 
 @AndroidEntryPoint
 class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
@@ -91,14 +90,21 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(query!=null){
-                    val filter = MovieFilter(MovieFilter.TITLE_FILTER, query, "")
+                    val filter = MovieFilter(query=query, null, null, null, null)
                     moviesViewModel.searchMovies(filter)
                 }
                 return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean =
-                true
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null && newText!="") {
+                    //val filter = MovieFilter(MovieFilter.TITLE_FILTER, newText, "")
+                    val filter = MovieFilter(query = newText, null, null, null, null)
+                    moviesViewModel.searchMovies(filter)
+                }
+
+               return true
+            }
         })
     }
 
