@@ -9,9 +9,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.miguel.moviesapp.R
-import com.miguel.moviesapp.api.MovieFilter
+import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +25,8 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
 
     private val binding get() = _binding!!
 
-    private lateinit var currentFilter : String
+    private var currentFilter = MovieFilter(null, null,
+            true, null, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,10 +74,7 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
                     textViewEmpty.isVisible = false
                 }
             }
-
         }
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,9 +88,11 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+
+                // This is temporary until I figure out how to use a current MovieFilter object instead
                 if(query!=null){
-                    val filter = MovieFilter(query=query, null, null, null, null)
-                    moviesViewModel.searchMovies(filter)
+                    currentFilter = MovieFilter(query=query, currentFilter.language, currentFilter.includeAdult, currentFilter.country, currentFilter.year)
+                    moviesViewModel.searchMovies(currentFilter)
                 }
                 return true
             }
@@ -99,8 +100,14 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null && newText!="") {
                     //val filter = MovieFilter(MovieFilter.TITLE_FILTER, newText, "")
-                    val filter = MovieFilter(query = newText, null, null, null, null)
-                    moviesViewModel.searchMovies(filter)
+                    currentFilter = MovieFilter(query = newText, currentFilter.language, currentFilter.includeAdult, currentFilter.country, currentFilter.year)
+                    moviesViewModel.searchMovies(currentFilter)
+                }
+                // This else insures that when the text is erased from the search bar it will show the popular
+                // Movies again
+                else{
+                    currentFilter = MovieFilter(null,  currentFilter.language, currentFilter.includeAdult, currentFilter.country, currentFilter.year)
+                    moviesViewModel.searchMovies(currentFilter)
                 }
 
                return true
@@ -111,16 +118,15 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.filter_menu_item -> {
-
+                // Should launch the MovieFilterFragment through navigation component, returning some kind of filter
+                val action = MoviesListFragmentDirections.actionMoviesListFragmentToMovieFilterFragment(currentFilter)
+                findNavController().navigate(action)
             }
-
         }
         return true
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

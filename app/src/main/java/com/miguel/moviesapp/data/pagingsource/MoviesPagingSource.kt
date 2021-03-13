@@ -2,7 +2,7 @@ package com.miguel.moviesapp.data.pagingsource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.miguel.moviesapp.api.MovieFilter
+import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.api.MovieAPI
 import com.miguel.moviesapp.api.MovieApiResponse
 import com.miguel.moviesapp.data.Movie
@@ -44,9 +44,10 @@ class MoviesPagingSource(
 
     private suspend fun searchFilter(filter : MovieFilter, position : Int) : MovieApiResponse {
         if(filter.query==null){
-            return movieApi.searchPopular(MovieAPI.CLIENT_ID, position)
+            return movieApi.searchPopular(MovieAPI.CLIENT_ID, position, filter.language, filter.country)
         }
         return movieApi.searchMovies(MovieAPI.CLIENT_ID,
-        filter.query, position, filter.language, filter.includeAdult, filter.country, filter.year)
+                    filter.query, position, filter.language, filter.includeAdult, filter.country, filter.year)
+
     }
 }

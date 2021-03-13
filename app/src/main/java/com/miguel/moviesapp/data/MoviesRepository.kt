@@ -3,7 +3,7 @@ package com.miguel.moviesapp.data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
-import com.miguel.moviesapp.api.MovieFilter
+import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.api.MovieAPI
 import com.miguel.moviesapp.data.pagingsource.MoviesPagingSource
 import javax.inject.Inject

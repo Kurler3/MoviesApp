@@ -9,5 +9,18 @@
         android:id="@+id/moviesListFragment"
         android:name="com.miguel.moviesapp.ui.movies.MoviesListFragment"
         android:label="Movies"
-        tools:layout="@layout/movies_list_layout" />
+        tools:layout="@layout/movies_list_layout" >
+        <action
+            android:id="@+id/action_moviesListFragment_to_movieFilterFragment"
+            app:destination="@id/movieFilterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieFilterFragment"
+        android:name="com.miguel.moviesapp.ui.filters.MovieFilterFragment"
+        android:label="movies_filter_layout"
+        tools:layout="@layout/movies_filter_layout" >
+        <argument
+            android:name="currentMovieFilter"
+            app:argType="com.miguel.moviesapp.ui.filters.MovieFilter" />
+    </fragment>
 </navigation>

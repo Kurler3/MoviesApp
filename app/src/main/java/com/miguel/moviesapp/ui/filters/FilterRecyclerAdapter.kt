@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miguel.moviesapp.databinding.FilterItemLayoutBinding
 import com.miguel.moviesapp.databinding.MoviesFilterLayoutBinding
 
-class FilterRecyclerAdapter(private val values: Array<String>) : RecyclerView.Adapter<FilterRecyclerAdapter.FilterViewHolder>() {
+class FilterRecyclerAdapter(private val values: ArrayList<String>) : RecyclerView.Adapter<FilterRecyclerAdapter.FilterViewHolder>() {
 
     class FilterViewHolder(private val binding: FilterItemLayoutBinding) : RecyclerView.ViewHolder(binding.root){
 

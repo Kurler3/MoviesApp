@@ -24,7 +24,9 @@ interface MovieAPI {
     @GET("movie/popular")
     suspend fun searchPopular(
         @Query("api_key") apiKey: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("language") language: String?,
+        @Query("region") region: String?
     ) : MovieApiResponse
 
 }

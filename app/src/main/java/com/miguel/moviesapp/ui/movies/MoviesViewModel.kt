@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.miguel.moviesapp.api.MovieFilter
+import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.data.MoviesRepository
 
 class MoviesViewModel @ViewModelInject constructor(
@@ -29,6 +29,6 @@ class MoviesViewModel @ViewModelInject constructor(
 
     companion object {
         private val DEFAULT_QUERY = MovieFilter(null, null,
-        null, null, null)
+        true, null, null)
     }
 }
