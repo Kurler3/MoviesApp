@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.movies_filter_layout.*
 import java.util.logging.Filter
 
 @AndroidEntryPoint
-class MovieFilterFragment : Fragment(R.layout.movies_filter_layout) {
+class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilterInterface {
 
     private val args : MovieFilterFragmentArgs by navArgs()
 
@@ -34,9 +34,14 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout) {
 
         // Create the rest of the adapters for the other recycler views
 
-        val languageRecyclerAdapter = FilterRecyclerAdapter(viewModel.LANGUAGE_FILTERS)
-        val regionRecyclerAdapter = FilterRecyclerAdapter(viewModel.COUNTRY_FILTERS)
-        val yearRecyclerAdapter = FilterRecyclerAdapter(viewModel.YEAR_FILTERS)
+        val languageRecyclerAdapter = FilterRecyclerAdapter(view.context,this,
+                viewModel.LANGUAGE_FILTERS, convertToLanguagePosition(), MovieFilterViewModel.LANGUAGE_FILTER_ADAPTER)
+
+        val regionRecyclerAdapter = FilterRecyclerAdapter(view.context,this,viewModel.COUNTRY_FILTERS,
+                convertToCountryPosition(), MovieFilterViewModel.LANGUAGE_FILTER_ADAPTER)
+
+        val yearRecyclerAdapter = FilterRecyclerAdapter(view.context,this,viewModel.YEAR_FILTERS,
+                convertToYearPosition(), MovieFilterViewModel.YEAR_FILTER_ADAPTER)
 
         binding.languageFilterRecyclerView.apply {
             setHasFixedSize(true)
@@ -75,8 +80,68 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout) {
         }
     }
 
+    private fun convertToLanguagePosition() : Int {
+        var position = -1
+        if(currentFilter.language!=null){
+            when(currentFilter.language){
+                "en-US" -> position = 0
+                "de-CH" -> position = 1
+                "fr-FR" -> position = 2
+                "pt-PT" -> position = 3
+                "zh-CN" -> position = 4
+                "ja-JP" -> position = 5
+            }
+        }
+        return position
+    }
+
+    private fun convertToCountryPosition() : Int {
+        var position = -1
+        if(currentFilter.country!=null){
+            when(currentFilter.country){
+                "US" -> position = 0
+                "CA" -> position = 1
+                "DE" -> position = 2
+                "FR" -> position = 3
+                "PT" -> position = 4
+                "CN" -> position = 5
+                "JP" -> position = 6
+            }
+        }
+        return position
+    }
+
+    private fun convertToYearPosition() : Int {
+        var position = -1
+        if(currentFilter.year!=null){
+            position = MovieFilterViewModel.getYears().indexOf(currentFilter.year)
+        }
+        return position
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    /* Interface that connects fragment with the adapters */
+    /* Whenever the filter is changed, a new adapter should be made and attached to the corresponding recycler view */
+
+    override fun onLanguageFilterChanged(newLanguage: String) {
+        currentFilter = MovieFilter(currentFilter.query, newLanguage, currentFilter.includeAdult,
+        currentFilter.country, currentFilter.year)
+
+        // Have to create a new adapter for the language recycler view
+    }
+    
+    // Do the same for these two
+    override fun onCountryFilterChanged(newCountry: String) {
+        TODO("Not yet implemented")
+
+
+    }
+
+    override fun onYearFilterChanged(newYear: Int) {
+        TODO("Not yet implemented")
     }
 }
