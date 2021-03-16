@@ -54,7 +54,7 @@ class MovieFilterViewModel @ViewModelInject constructor(): ViewModel(){
                 else -> "-1"
             }
         }
-        fun getYearFilterValue(position: Int) : Int = getYears()[position].toInt()
+        fun getYearFilterValue(position: Int) : String = getYears()[position]
         
         fun getYears() : ArrayList<String>{
             var array : ArrayList<String> = ArrayList()
