@@ -25,7 +25,7 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
 
     private val binding get() = _binding!!
 
-    private var currentFilter = MovieFilter(null, null,
+    private var currentFilter = MovieFilter(null, "en-US",
             true, null, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -3,17 +3,15 @@ package com.miguel.moviesapp.ui.filters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.compose.ui.layout.Layout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.databinding.FilterItemLayoutBinding
-import com.miguel.moviesapp.databinding.MoviesFilterLayoutBinding
 
 class FilterRecyclerAdapter(private val context: Context,
                             private val listener: MovieFilterInterface,
                             private val values: ArrayList<String>,
-                            private var selectedPosition: Int,
+                            val selectedPosition: Int,
                             private val typeOfList: Int
                             ) : RecyclerView.Adapter<FilterRecyclerAdapter.FilterViewHolder>() {
 
@@ -28,15 +26,16 @@ class FilterRecyclerAdapter(private val context: Context,
                 }
 
                 filterBackground.setOnClickListener {
+
                     when(typeOfList){
                         MovieFilterViewModel.LANGUAGE_FILTER_ADAPTER ->{
-                            listener.onLanguageFilterChanged(values[layoutPosition])
+                            listener.onLanguageFilterChanged(layoutPosition)
                         }
                         MovieFilterViewModel.COUNTRY_FILTER_ADAPTER -> {
-                            listener.onCountryFilterChanged(values[layoutPosition])
+                            listener.onCountryFilterChanged(layoutPosition)
                         }
                         MovieFilterViewModel.YEAR_FILTER_ADAPTER -> {
-                            listener.onYearFilterChanged(values[layoutPosition].toInt())
+                            listener.onYearFilterChanged(layoutPosition)
                         }
                     }
                 }
