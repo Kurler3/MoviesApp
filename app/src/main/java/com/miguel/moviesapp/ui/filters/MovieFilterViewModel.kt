@@ -1,22 +1,11 @@
 package com.miguel.moviesapp.ui.filters
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
-import javax.inject.Singleton
 
 
 class MovieFilterViewModel @ViewModelInject constructor(): ViewModel(){
 
-    // Need to get the MovieFilter that the MoviesListFragment was using when this was launched and assign it here
-    val movieFilter = MutableLiveData(DEFAULT_MOVIE_FILTER)
-
-
-
-    fun changeFilter(filter : MovieFilter){
-        movieFilter.value = filter
-    }
 
     val LANGUAGE_FILTERS : ArrayList<String> = getLanguages()
     val COUNTRY_FILTERS = getCountries()
@@ -27,9 +16,6 @@ class MovieFilterViewModel @ViewModelInject constructor(): ViewModel(){
         val LANGUAGE_FILTER_ADAPTER = 1
         val COUNTRY_FILTER_ADAPTER = 2
         val YEAR_FILTER_ADAPTER = 3
-
-        private val DEFAULT_MOVIE_FILTER = MovieFilter(null, null,
-                true, null, null)
 
         fun getLanguageFilterValue(position : Int) : String {
             return when (position) {

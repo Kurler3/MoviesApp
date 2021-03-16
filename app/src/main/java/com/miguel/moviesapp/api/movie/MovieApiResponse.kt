@@ -1,4 +1,4 @@
-package com.miguel.moviesapp.api
+package com.miguel.moviesapp.api.movie
 
 import com.miguel.moviesapp.data.Movie
 

@@ -1,7 +1,6 @@
 package com.miguel.moviesapp.di
 
-import com.miguel.moviesapp.MoviesApiApplicationClass
-import com.miguel.moviesapp.api.MovieAPI
+import com.miguel.moviesapp.api.movie.MovieAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -10,6 +10,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                 .findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-
+        bottom_nav_view.setupWithNavController(navController)
     }
 
 

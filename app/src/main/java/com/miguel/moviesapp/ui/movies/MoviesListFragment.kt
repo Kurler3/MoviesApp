@@ -14,6 +14,7 @@ import androidx.paging.LoadState
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
+import com.miguel.moviesapp.ui.filters.MovieFilterFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -74,6 +75,14 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
                     textViewEmpty.isVisible = false
                 }
             }
+        }
+
+        // Receiving changes for when the filter is changed in the MovieFilterFragment
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<MovieFilter>(MovieFilterFragment.CURRENT_MOVIE_FILTER)?.observe(
+                viewLifecycleOwner) { newFilter ->
+            // Update the current filter
+            currentFilter = newFilter
+            moviesViewModel.searchMovies(currentFilter)
         }
     }
 

@@ -22,10 +22,11 @@ class FilterRecyclerAdapter(private val context: Context,
                 filterValueTextView.text = value
                 if(positionPassed == selectedPosition){
                     filterValueTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_grey))
-                    filterBackground.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
+                    //filterBackground.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
+                    filterBackground.background = ContextCompat.getDrawable(context, R.drawable.filter_selected_rounded_borders)
                 }
 
-                filterBackground.setOnClickListener {
+                itemView.setOnClickListener {
 
                     when(typeOfList){
                         MovieFilterViewModel.LANGUAGE_FILTER_ADAPTER ->{

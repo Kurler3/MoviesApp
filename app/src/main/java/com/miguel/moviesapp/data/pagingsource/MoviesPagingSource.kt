@@ -3,16 +3,16 @@ package com.miguel.moviesapp.data.pagingsource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.miguel.moviesapp.ui.filters.MovieFilter
-import com.miguel.moviesapp.api.MovieAPI
-import com.miguel.moviesapp.api.MovieApiResponse
+import com.miguel.moviesapp.api.movie.MovieAPI
+import com.miguel.moviesapp.api.movie.MovieApiResponse
 import com.miguel.moviesapp.data.Movie
 import retrofit2.HttpException
 import java.io.IOException
 
 
 class MoviesPagingSource(
-    private val movieApi:MovieAPI,
-    private val filter: MovieFilter
+        private val movieApi: MovieAPI,
+        private val filter: MovieFilter
 ) : PagingSource<Int, Movie>(){
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
         val position = params.key ?: PagingSourceConstants.STARTING_PAGE_INDEX

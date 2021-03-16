@@ -15,5 +15,11 @@
         app:navGraph="@navigation/nav_graph"
         app:defaultNavHost="true"
         />
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_view"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:background="@color/grey"
+        app:menu="@menu/bottom_nav_bar"
+        />
 </RelativeLayout>

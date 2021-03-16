@@ -1,20 +1,22 @@
 package com.miguel.moviesapp.ui.filters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.databinding.MoviesFilterLayoutBinding
+import com.miguel.moviesapp.ui.filters.MovieFilterFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.movies_filter_layout.*
-import java.util.logging.Filter
 
 @AndroidEntryPoint
 class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilterInterface {
-
+    companion object {
+        val CURRENT_MOVIE_FILTER = "currentMovieFilter"
+    }
     private val args : MovieFilterFragmentArgs by navArgs()
 
     private val viewModel by viewModels<MovieFilterViewModel>()
@@ -50,32 +52,28 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilter
         binding.languageFilterRecyclerView.apply {
             setHasFixedSize(true)
             adapter = languageRecyclerAdapter
-            if(MovieFilterViewModel.convertToLanguagePosition(currentFilter.language)!=-1){
+            if(MovieFilterViewModel.convertToLanguagePosition(currentFilter.language) !=-1){
                 smoothScrollToPosition(MovieFilterViewModel.convertToLanguagePosition(currentFilter.language))
             }
         }
         binding.regionFilterRecyclerView.apply {
             setHasFixedSize(true)
             adapter = regionRecyclerAdapter
-            if(MovieFilterViewModel.convertToCountryPosition(currentFilter.country)!=-1) {
+            if(MovieFilterViewModel.convertToCountryPosition(currentFilter.country) !=-1) {
                 smoothScrollToPosition(MovieFilterViewModel.convertToCountryPosition(currentFilter.country))
             }
         }
         binding.yearFilterRecyclerView.apply{
             setHasFixedSize(true)
             adapter = yearRecyclerAdapter
-            if(MovieFilterViewModel.convertToYearPosition(currentFilter.year)!=-1) {
+            if(MovieFilterViewModel.convertToYearPosition(currentFilter.year) !=-1) {
                 smoothScrollToPosition(MovieFilterViewModel.convertToYearPosition(currentFilter.year))
             }
         }
 
 
         binding.adultFilterSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if(currentFilter!=null){
-                currentFilter!!.includeAdult = isChecked
-
-                viewModel.changeFilter(currentFilter!!)
-            }
+            currentFilter.includeAdult = isChecked
         }
 
         // Clear all filters at once and update the MovieFilter object in the viewmodel
@@ -93,11 +91,10 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilter
         binding.filterSeeResultsButton.setOnClickListener {
             // Go back on navigation component and send the currentFilter to the list fragment, updating the currentFilter there and
             // obtaining search results accordingly
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(CURRENT_MOVIE_FILTER, currentFilter)
+            findNavController().popBackStack()
         }
 
-        viewModel.movieFilter.observe(viewLifecycleOwner){
-            currentFilter = it
-        }
     }
 
     override fun onDestroy() {
@@ -148,7 +145,7 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilter
                 }
                 binding.languageFilterRecyclerView.apply {
                     adapter = languageRecyclerAdapter
-                    if(MovieFilterViewModel.convertToLanguagePosition(currentFilter.language)!=-1){
+                    if(MovieFilterViewModel.convertToLanguagePosition(currentFilter.language) !=-1){
                         smoothScrollToPosition(MovieFilterViewModel.convertToLanguagePosition(currentFilter.language))
                     }
                 }
@@ -161,7 +158,7 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilter
                 }
                 binding.regionFilterRecyclerView.apply {
                     adapter = regionRecyclerAdapter
-                    if(MovieFilterViewModel.convertToCountryPosition(currentFilter.country)!=-1) {
+                    if(MovieFilterViewModel.convertToCountryPosition(currentFilter.country) !=-1) {
                         smoothScrollToPosition(MovieFilterViewModel.convertToCountryPosition(currentFilter.country))
                     }
                 }
@@ -173,8 +170,9 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), MovieFilter
                             viewModel.YEAR_FILTERS, MovieFilterViewModel.convertToYearPosition(newValue?.toInt()), MovieFilterViewModel.YEAR_FILTER_ADAPTER)
                 }
                 binding.yearFilterRecyclerView.apply {
+                    adapter = null
                     adapter = yearRecyclerAdapter
-                    if(MovieFilterViewModel.convertToYearPosition(currentFilter.year)!=-1) {
+                    if(MovieFilterViewModel.convertToYearPosition(currentFilter.year) !=-1) {
                         smoothScrollToPosition(MovieFilterViewModel.convertToYearPosition(currentFilter.year))
                     }
                 }

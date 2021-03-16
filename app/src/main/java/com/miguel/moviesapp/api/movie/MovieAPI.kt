@@ -1,6 +1,5 @@
-package com.miguel.moviesapp.api
+package com.miguel.moviesapp.api.movie
 
-import androidx.viewbinding.BuildConfig
 import retrofit2.http.GET
 import retrofit2.http.Query
 
