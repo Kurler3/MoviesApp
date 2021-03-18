@@ -11,11 +11,11 @@ import com.miguel.moviesapp.databinding.MoviesFilterLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInterface {
+class FilterFragment : Fragment(R.layout.movies_filter_layout), FilterInterface {
     companion object {
         val CURRENT_MOVIE_FILTER = "currentMovieFilter"
     }
-    private val args : MovieFilterFragmentArgs by navArgs()
+    private val args : FilterFragmentArgs by navArgs()
 
     private val viewModel by viewModels<FilterViewModel>()
 

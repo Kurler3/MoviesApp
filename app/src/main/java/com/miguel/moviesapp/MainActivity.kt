@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.findNavController()
 
         appBarConfiguration = AppBarConfiguration(
-                setOf(R.id.moviesListFragment, R.id.seriesListFragment)
+                setOf(R.id.moviesListFragment, R.id.seriesListFragment, R.id.favoritesFragment)
         )
 
         setSupportActionBar(toolbar)

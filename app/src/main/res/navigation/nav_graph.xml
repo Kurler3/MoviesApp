@@ -41,4 +41,9 @@
             android:name="currentSeriesFilter"
             app:argType="com.miguel.moviesapp.ui.filters.SeriesFilter" />
     </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.miguel.moviesapp.ui.favorites.FavoritesFragment"
+        android:label="favorites_fragment_layout"
+        tools:layout="@layout/favorites_fragment_layout" />
 </navigation>
