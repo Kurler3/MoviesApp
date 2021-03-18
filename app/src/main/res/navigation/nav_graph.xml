@@ -17,10 +17,15 @@
     <fragment
         android:id="@+id/movieFilterFragment"
         android:name="com.miguel.moviesapp.ui.filters.MovieFilterFragment"
-        android:label="movies_filter_layout"
-        tools:layout="@layout/movies_filter_layout" >
+        android:label="Movies Filter"
+        tools:layout="@layout/movies_filter_layout">
         <argument
             android:name="currentMovieFilter"
             app:argType="com.miguel.moviesapp.ui.filters.MovieFilter" />
     </fragment>
+    <fragment
+        android:id="@+id/seriesListFragment"
+        android:name="com.miguel.moviesapp.ui.series.SeriesListFragment"
+        android:label="Series"
+        tools:layout="@layout/series_list_layout" />
 </navigation>

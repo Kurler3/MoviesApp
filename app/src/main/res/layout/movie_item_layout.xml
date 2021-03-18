@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:layout_marginTop="12dp">
+    android:layout_marginBottom="12dp">
 
     <ImageView
         android:id="@+id/image_view_movie"
