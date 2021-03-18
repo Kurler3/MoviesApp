@@ -14,7 +14,8 @@ import androidx.paging.LoadState
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
-import com.miguel.moviesapp.ui.filters.MovieFilterFragment
+import com.miguel.moviesapp.ui.AppLoadStateAdapter
+import com.miguel.moviesapp.ui.filters.FilterFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,8 +46,8 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
             moviesRecyclerView.apply {
                 setHasFixedSize(true)
                 adapter = movieAdapter.withLoadStateHeaderAndFooter(
-                    header = MoviesLoadStateAdapter{movieAdapter.retry()},
-                    footer = MoviesLoadStateAdapter{movieAdapter.retry()}
+                    header = AppLoadStateAdapter{movieAdapter.retry()},
+                    footer = AppLoadStateAdapter{movieAdapter.retry()}
                 )
             }
         }
@@ -77,8 +78,8 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
             }
         }
 
-        // Receiving changes for when the filter is changed in the MovieFilterFragment
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<MovieFilter>(MovieFilterFragment.CURRENT_MOVIE_FILTER)?.observe(
+        // Receiving changes for when the filter is changed in the MovieFilterFragment.kt
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<MovieFilter>(FilterFragment.CURRENT_MOVIE_FILTER)?.observe(
                 viewLifecycleOwner) { newFilter ->
             // Update the current filter
             currentFilter = newFilter
@@ -127,7 +128,7 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.filter_menu_item -> {
-                // Should launch the MovieFilterFragment through navigation component, returning some kind of filter
+                // Should launch the MovieFilterFragment.kt through navigation component, returning some kind of filter
                 val action = MoviesListFragmentDirections.actionMoviesListFragmentToMovieFilterFragment(currentFilter)
                 findNavController().navigate(action)
             }

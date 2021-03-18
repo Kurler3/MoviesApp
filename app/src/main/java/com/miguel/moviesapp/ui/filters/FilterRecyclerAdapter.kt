@@ -9,7 +9,7 @@ import com.miguel.moviesapp.R
 import com.miguel.moviesapp.databinding.FilterItemLayoutBinding
 
 class FilterRecyclerAdapter(private val context: Context,
-                            private val listener: MovieFilterInterface,
+                            private val listener: FilterInterface,
                             private val values: ArrayList<String>,
                             val selectedPosition: Int,
                             private val typeOfList: Int
@@ -29,13 +29,13 @@ class FilterRecyclerAdapter(private val context: Context,
                 itemView.setOnClickListener {
 
                     when(typeOfList){
-                        MovieFilterViewModel.LANGUAGE_FILTER_ADAPTER ->{
+                        FilterViewModel.LANGUAGE_FILTER_ADAPTER ->{
                             listener.onLanguageFilterChanged(layoutPosition)
                         }
-                        MovieFilterViewModel.COUNTRY_FILTER_ADAPTER -> {
+                        FilterViewModel.COUNTRY_FILTER_ADAPTER -> {
                             listener.onCountryFilterChanged(layoutPosition)
                         }
-                        MovieFilterViewModel.YEAR_FILTER_ADAPTER -> {
+                        FilterViewModel.YEAR_FILTER_ADAPTER -> {
                             listener.onYearFilterChanged(layoutPosition)
                         }
                     }

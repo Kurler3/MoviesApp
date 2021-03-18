@@ -1,6 +1,6 @@
 package com.miguel.moviesapp.di
 
-import com.miguel.moviesapp.api.movie.MovieAPI
+import com.miguel.moviesapp.api.movie.AppAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,12 +18,12 @@ object AppModule {
     @Singleton
     fun provideRetrofit() : Retrofit =
         Retrofit.Builder()
-            .baseUrl(MovieAPI.BASE_URL)
+            .baseUrl(AppAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
     @Provides
     @Singleton
-    fun provideMovieAPI(retrofit: Retrofit ) : MovieAPI =
-        retrofit.create(MovieAPI::class.java)
+    fun provideMovieAPI(retrofit: Retrofit ) : AppAPI =
+        retrofit.create(AppAPI::class.java)
 }

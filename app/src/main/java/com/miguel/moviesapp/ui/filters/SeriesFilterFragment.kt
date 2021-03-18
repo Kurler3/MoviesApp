@@ -7,41 +7,39 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.miguel.moviesapp.R
-import com.miguel.moviesapp.databinding.MoviesFilterLayoutBinding
+import com.miguel.moviesapp.databinding.SeriesFilterLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInterface {
+class SeriesFilterFragment : Fragment(R.layout.series_filter_layout), FilterInterface {
     companion object {
-        val CURRENT_MOVIE_FILTER = "currentMovieFilter"
+        val CURRENT_SERIES_FILTER = "currentSeriesFilter"
     }
-    private val args : MovieFilterFragmentArgs by navArgs()
+    private val args : SeriesFilterFragmentArgs by navArgs()
 
     private val viewModel by viewModels<FilterViewModel>()
 
-    private var _binding : MoviesFilterLayoutBinding? = null
+    private var _binding : SeriesFilterLayoutBinding? = null
 
     private val binding get() = _binding!!
 
-    private lateinit var currentFilter : MovieFilter
+    private lateinit var currentFilter : SeriesFilter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = MoviesFilterLayoutBinding.bind(view)
+        _binding = SeriesFilterLayoutBinding.bind(view)
 
-        currentFilter = args.currentMoviesFilter
+        currentFilter = args.currentSeriesFilter
 
         // Create the rest of the adapters for the other recycler views
 
         val languageRecyclerAdapter = FilterRecyclerAdapter(view.context,this,
                 viewModel.LANGUAGE_FILTERS, FilterViewModel.convertToLanguagePosition(currentFilter.language), FilterViewModel.LANGUAGE_FILTER_ADAPTER)
 
-        val regionRecyclerAdapter = FilterRecyclerAdapter(view.context,this,viewModel.COUNTRY_FILTERS,
-                FilterViewModel.convertToCountryPosition(currentFilter.country), FilterViewModel.COUNTRY_FILTER_ADAPTER)
 
         val yearRecyclerAdapter = FilterRecyclerAdapter(view.context,this,viewModel.YEAR_FILTERS,
-                FilterViewModel.convertToYearPosition(currentFilter.year), FilterViewModel.YEAR_FILTER_ADAPTER)
+                FilterViewModel.convertToYearPosition(currentFilter.firstAiredYear), FilterViewModel.YEAR_FILTER_ADAPTER)
 
         // Initialize the switch
         binding.adultFilterSwitch.isChecked = currentFilter.includeAdult
@@ -54,18 +52,12 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInter
                 smoothScrollToPosition(FilterViewModel.convertToLanguagePosition(currentFilter.language))
             }
         }
-        binding.regionFilterRecyclerView.apply {
-            setHasFixedSize(true)
-            adapter = regionRecyclerAdapter
-            if(FilterViewModel.convertToCountryPosition(currentFilter.country) !=-1) {
-                smoothScrollToPosition(FilterViewModel.convertToCountryPosition(currentFilter.country))
-            }
-        }
+
         binding.yearFilterRecyclerView.apply{
             setHasFixedSize(true)
             adapter = yearRecyclerAdapter
-            if(FilterViewModel.convertToYearPosition(currentFilter.year) !=-1) {
-                smoothScrollToPosition(FilterViewModel.convertToYearPosition(currentFilter.year))
+            if(FilterViewModel.convertToYearPosition(currentFilter.firstAiredYear) !=-1) {
+                smoothScrollToPosition(FilterViewModel.convertToYearPosition(currentFilter.firstAiredYear))
             }
         }
 
@@ -78,10 +70,9 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInter
         binding.filterClearButton.setOnClickListener {
             // Here have to update the currentFilter and re-assign the adapters for all recyclerviews
 
-            currentFilter = MovieFilter(currentFilter.query, null, true, null, null)
+            currentFilter = SeriesFilter(currentFilter.query, null, true, null)
 
             changeAdapter(FilterViewModel.LANGUAGE_FILTER_ADAPTER, null)
-            changeAdapter(FilterViewModel.COUNTRY_FILTER_ADAPTER, null)
             changeAdapter(FilterViewModel.YEAR_FILTER_ADAPTER, null)
         }
 
@@ -89,7 +80,7 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInter
         binding.filterSeeResultsButton.setOnClickListener {
             // Go back on navigation component and send the currentFilter to the list fragment, updating the currentFilter there and
             // obtaining search results accordingly
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(CURRENT_MOVIE_FILTER, currentFilter)
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(CURRENT_SERIES_FILTER, currentFilter)
             findNavController().popBackStack()
         }
 
@@ -107,28 +98,23 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInter
         val newLanguage = FilterViewModel.getLanguageFilterValue(position)
 
         // Update the filter
-        currentFilter = MovieFilter(currentFilter.query, newLanguage, currentFilter.includeAdult,
-        currentFilter.country, currentFilter.year)
+        currentFilter = SeriesFilter(currentFilter.query, newLanguage, currentFilter.includeAdult,
+        currentFilter.firstAiredYear)
 
         // Change the Adapter for this recycler view
         changeAdapter(FilterViewModel.LANGUAGE_FILTER_ADAPTER, newLanguage)
     }
-    
-    // Do the same for these two
-    override fun onCountryFilterChanged(position: Int) {
-        val newCountry = FilterViewModel.getCountryFilterValue(position)
 
-        currentFilter = MovieFilter(currentFilter.query, currentFilter.language, currentFilter.includeAdult,
-                newCountry, currentFilter.year)
-
-        changeAdapter(FilterViewModel.COUNTRY_FILTER_ADAPTER, newCountry)
+    // There's no use for this in this filter fragment
+    override fun onCountryFilterChanged(newCountry: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun onYearFilterChanged(position: Int) {
         val newYear = FilterViewModel.getYearFilterValue(position)
 
-        currentFilter = MovieFilter(currentFilter.query, currentFilter.language, currentFilter.includeAdult,
-                currentFilter.country, newYear.toInt())
+        currentFilter = SeriesFilter(currentFilter.query, currentFilter.language, currentFilter.includeAdult,
+                newYear.toInt())
 
         changeAdapter(FilterViewModel.YEAR_FILTER_ADAPTER, newYear)
     }
@@ -148,19 +134,6 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInter
                     }
                 }
             }
-            FilterViewModel.COUNTRY_FILTER_ADAPTER -> {
-                // Have to create a new adapter for the region recycler view
-                val regionRecyclerAdapter = view?.context?.let {
-                    FilterRecyclerAdapter(it,this,
-                            viewModel.COUNTRY_FILTERS, FilterViewModel.convertToCountryPosition(newValue), FilterViewModel.COUNTRY_FILTER_ADAPTER)
-                }
-                binding.regionFilterRecyclerView.apply {
-                    adapter = regionRecyclerAdapter
-                    if(FilterViewModel.convertToCountryPosition(currentFilter.country) !=-1) {
-                        smoothScrollToPosition(FilterViewModel.convertToCountryPosition(currentFilter.country))
-                    }
-                }
-            }
             FilterViewModel.YEAR_FILTER_ADAPTER -> {
                 // Have to create a new adapter for the year recycler view
                 val yearRecyclerAdapter = view?.context?.let {
@@ -170,8 +143,8 @@ class MovieFilterFragment : Fragment(R.layout.movies_filter_layout), FilterInter
                 binding.yearFilterRecyclerView.apply {
                     adapter = null
                     adapter = yearRecyclerAdapter
-                    if(FilterViewModel.convertToYearPosition(currentFilter.year) !=-1) {
-                        smoothScrollToPosition(FilterViewModel.convertToYearPosition(currentFilter.year))
+                    if(FilterViewModel.convertToYearPosition(currentFilter.firstAiredYear) !=-1) {
+                        smoothScrollToPosition(FilterViewModel.convertToYearPosition(currentFilter.firstAiredYear))
                     }
                 }
             }

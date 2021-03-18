@@ -1,4 +1,4 @@
-package com.miguel.moviesapp.ui.movies
+package com.miguel.moviesapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,10 +8,10 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miguel.moviesapp.databinding.MoviesLoadStateFooterLayoutBinding
 
-class MoviesLoadStateAdapter(private val retry: () -> Unit) :
-    LoadStateAdapter<MoviesLoadStateAdapter.MoviesLoadStateViewHolder>() {
+class AppLoadStateAdapter(private val retry: () -> Unit) :
+    LoadStateAdapter<AppLoadStateAdapter.AppLoadStateViewHolder>() {
 
-    inner class MoviesLoadStateViewHolder(
+    inner class AppLoadStateViewHolder(
         private val binding: MoviesLoadStateFooterLayoutBinding
         ) :
         RecyclerView.ViewHolder(binding.root){
@@ -30,20 +30,20 @@ class MoviesLoadStateAdapter(private val retry: () -> Unit) :
             }
     }
 
-    override fun onBindViewHolder(holder: MoviesLoadStateViewHolder, loadState: LoadState) {
+    override fun onBindViewHolder(holder: AppLoadStateViewHolder, loadState: LoadState) {
         holder.bind(loadState)
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         loadState: LoadState
-    ): MoviesLoadStateViewHolder {
+    ): AppLoadStateViewHolder {
         val binding = MoviesLoadStateFooterLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return MoviesLoadStateViewHolder(binding)
+        return AppLoadStateViewHolder(binding)
     }
 
 

@@ -4,7 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 
 
-class MovieFilterViewModel @ViewModelInject constructor(): ViewModel(){
+class FilterViewModel @ViewModelInject constructor(): ViewModel(){
 
 
     val LANGUAGE_FILTERS : ArrayList<String> = getLanguages()

@@ -3,7 +3,7 @@ package com.miguel.moviesapp.api.movie
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface MovieAPI {
+interface AppAPI {
 
     companion object {
         const val BASE_URL = "https://api.themoviedb.org/3/"
@@ -21,11 +21,28 @@ interface MovieAPI {
     ) : MovieApiResponse
 
     @GET("movie/popular")
-    suspend fun searchPopular(
+    suspend fun searchMoviesPopular(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int,
         @Query("language") language: String?,
         @Query("region") region: String?
     ) : MovieApiResponse
+
+    @GET("search/tv")
+    suspend fun searchSeries(
+            @Query("api_key") apiKey: String,
+            @Query("query") query: String,
+            @Query("page") page: Int,
+            @Query("language") language: String?,
+            @Query("include_adult") includeAdult: Boolean?,
+            @Query("first_air_date_year") year: Int?
+    ) : SeriesApiResponse
+
+    @GET("tv/popular")
+    suspend fun searchSeriesPopular(
+            @Query("api_key") apiKey: String,
+            @Query("page") page: Int,
+            @Query("language") language: String?
+    ) : SeriesApiResponse
 
 }

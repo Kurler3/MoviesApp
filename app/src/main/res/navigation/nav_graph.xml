@@ -16,16 +16,29 @@
     </fragment>
     <fragment
         android:id="@+id/movieFilterFragment"
-        android:name="com.miguel.moviesapp.ui.filters.MovieFilterFragment"
+        android:name="com.miguel.moviesapp.ui.filters.FilterFragment"
         android:label="Movies Filter"
         tools:layout="@layout/movies_filter_layout">
         <argument
-            android:name="currentMovieFilter"
+            android:name="currentMoviesFilter"
             app:argType="com.miguel.moviesapp.ui.filters.MovieFilter" />
     </fragment>
     <fragment
         android:id="@+id/seriesListFragment"
         android:name="com.miguel.moviesapp.ui.series.SeriesListFragment"
         android:label="Series"
-        tools:layout="@layout/series_list_layout" />
+        tools:layout="@layout/series_list_layout" >
+        <action
+            android:id="@+id/action_seriesListFragment_to_seriesFilterFragment"
+            app:destination="@id/seriesFilterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/seriesFilterFragment"
+        android:name="com.miguel.moviesapp.ui.filters.SeriesFilterFragment"
+        android:label="Series Filter"
+        tools:layout="@layout/series_filter_layout">
+        <argument
+            android:name="currentSeriesFilter"
+            app:argType="com.miguel.moviesapp.ui.filters.SeriesFilter" />
+    </fragment>
 </navigation>
