@@ -17,7 +17,7 @@ interface MoviesDao {
     suspend fun findByTitle(title: String) : List<Movie>
 
     @Insert
-    suspend fun insertAll(vararg movies: Movie)
+    suspend fun insert(movie: Movie)
 
     @Delete
     suspend fun delete(movie: Movie)

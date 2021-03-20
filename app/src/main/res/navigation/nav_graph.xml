@@ -44,6 +44,6 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.miguel.moviesapp.ui.favorites.FavoritesFragment"
-        android:label="favorites_fragment_layout"
+        android:label="Favorites"
         tools:layout="@layout/favorites_fragment_layout" />
 </navigation>

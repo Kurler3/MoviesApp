@@ -17,7 +17,7 @@ interface SeriesDao {
     suspend fun findByTitle(title: String) : List<Serie>
 
     @Insert
-    suspend fun insertAll(vararg series: Serie)
+    suspend fun insert(serie: Serie)
 
     @Delete
     suspend fun delete(serie: Serie)

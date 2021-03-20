@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/search_menu_item"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:title="Filter"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item android:title="Movies"
+                android:id="@+id/change_to_movies"
+                android:icon="@drawable/ic_baseline_movie_filter_24"/>
+            <item android:title="Series"
+                android:id="@+id/change_to_series"
+                android:icon="@drawable/ic_baseline_live_tv_24"/>
+        </menu>
+    </item>
+</menu>

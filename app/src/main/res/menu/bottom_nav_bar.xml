@@ -9,7 +9,7 @@
         android:title="Series"
         android:icon="@drawable/ic_baseline_live_tv_24"/>
 
-    <item android:id="@+id/bottom_nav_favorites"
+    <item android:id="@+id/favoritesFragment"
         android:title="Favorites"
         android:icon="@drawable/ic_baseline_star_border_24"/>
 

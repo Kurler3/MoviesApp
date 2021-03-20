@@ -109,7 +109,6 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null && newText!="") {
-                    //val filter = MovieFilter(MovieFilter.TITLE_FILTER, newText, "")
                     currentFilter = MovieFilter(query = newText, currentFilter.language, currentFilter.includeAdult, currentFilter.country, currentFilter.year)
                     moviesViewModel.searchMovies(currentFilter)
                 }
