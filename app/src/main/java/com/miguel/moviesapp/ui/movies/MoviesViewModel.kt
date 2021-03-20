@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.data.AppRepository
+import com.miguel.moviesapp.data.Movie
+import kotlinx.coroutines.launch
 
 class MoviesViewModel @ViewModelInject constructor(
     private val movieRepository: AppRepository)
@@ -25,6 +27,10 @@ class MoviesViewModel @ViewModelInject constructor(
 
     fun searchMovies(filter: MovieFilter){
         currentQuery.value = filter
+    }
+
+    fun addMovieToFavorites(movie: Movie) = viewModelScope.launch {
+        movieRepository.insertMovie(movie)
     }
 
     companion object {

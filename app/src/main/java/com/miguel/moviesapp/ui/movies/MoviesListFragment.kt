@@ -11,15 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.google.android.material.snackbar.Snackbar
 import com.miguel.moviesapp.R
+import com.miguel.moviesapp.data.Movie
+import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
+import com.miguel.moviesapp.room.onFavorableItemsLongClicked
 import com.miguel.moviesapp.ui.AppLoadStateAdapter
 import com.miguel.moviesapp.ui.filters.FilterFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
-class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
+class MoviesListFragment : Fragment(R.layout.movies_list_layout), onFavorableItemsLongClicked{
 
     private val moviesViewModel by viewModels<MoviesViewModel>()
 
@@ -40,7 +45,7 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
 
         _binding = MoviesListLayoutBinding.bind(view)
 
-        val movieAdapter = MoviesAdapter()
+        val movieAdapter = MoviesAdapter(this)
 
         binding.apply {
             moviesRecyclerView.apply {
@@ -137,5 +142,33 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onMovieAddedToFavorites(movie: Movie?) {
+        // Adds it to the room database through the favorites view model
+        if(movie!=null) {
+            moviesViewModel.addMovieToFavorites(movie)
+
+            // Show some toast message
+            val snackbar = Snackbar.make(requireView(), "Movie: ${movie!!.title} added to Favorites!",
+                Snackbar.LENGTH_LONG)
+            snackbar.setAction("Ok") {
+                snackbar.dismiss()
+            }
+            snackbar.show()
+        }
+
+    }
+
+    override fun onMovieRemovedFromFavorites(movie: Movie?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSerieAddedToFavorites(serie: Serie?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSerieRemovedFromFavorites(serie: Serie?) {
+        TODO("Not yet implemented")
     }
 }

@@ -1,9 +1,8 @@
 package com.miguel.moviesapp.room.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
+import androidx.room.*
 import com.miguel.moviesapp.data.Movie
 
 @Dao
@@ -11,12 +10,12 @@ interface MoviesDao {
 
     // Using this one if there's no filters
     @Query("SELECT * FROM movies_table")
-    suspend fun getAll() : List<Movie>
+    fun getAll() : LiveData<List<Movie>>
 
     @Query("SELECT * FROM movies_table WHERE title LIKE :title")
-    suspend fun findByTitle(title: String) : List<Movie>
+    fun findByTitle(title: String) : LiveData<List<Movie>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(movie: Movie)
 
     @Delete

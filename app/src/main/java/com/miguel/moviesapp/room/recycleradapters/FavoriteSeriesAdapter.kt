@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -14,8 +15,9 @@ import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
 import com.miguel.moviesapp.databinding.SerieItemLayoutBinding
 
-class FavoriteSeriesAdapter : PagingDataAdapter<Serie, FavoriteSeriesAdapter.FavoriteSeriesViewHolder>(SERIE_COMPARATOR) {
+class FavoriteSeriesAdapter : ListAdapter<Serie, FavoriteSeriesAdapter.FavoriteSeriesViewHolder>(SERIE_COMPARATOR) {
 
+    private var series : List<Serie> = listOf()
 
     class FavoriteSeriesViewHolder(private val binding: SerieItemLayoutBinding)
         : RecyclerView.ViewHolder(binding.root) {
@@ -47,7 +49,7 @@ class FavoriteSeriesAdapter : PagingDataAdapter<Serie, FavoriteSeriesAdapter.Fav
     }
 
     override fun onBindViewHolder(holder: FavoriteSeriesViewHolder, position: Int) {
-        val serie = getItem(position)
+        val serie = series[position]
 
         if(serie!=null) holder.bind(serie)
     }
@@ -57,5 +59,10 @@ class FavoriteSeriesAdapter : PagingDataAdapter<Serie, FavoriteSeriesAdapter.Fav
             SerieItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return FavoriteSeriesViewHolder(binding)
+    }
+
+    fun setSeries(series: List<Serie>) {
+        this.series = series
+        notifyDataSetChanged()
     }
 }

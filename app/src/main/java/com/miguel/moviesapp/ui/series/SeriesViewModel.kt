@@ -7,7 +7,9 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.miguel.moviesapp.data.AppRepository
+import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.ui.filters.SeriesFilter
+import kotlinx.coroutines.launch
 
 class SeriesViewModel @ViewModelInject constructor(
     private val repository: AppRepository)
@@ -27,6 +29,9 @@ class SeriesViewModel @ViewModelInject constructor(
         currentQuery.value = filter
     }
 
+    fun addSeriesToFavorites(series: Serie) = viewModelScope.launch{
+        repository.insertSerie(series)
+    }
     companion object {
         private val DEFAULT_QUERY = SeriesFilter(null, null,
             true, null)

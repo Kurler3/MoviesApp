@@ -1,5 +1,6 @@
 package com.miguel.moviesapp.data
 
+import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
@@ -9,8 +10,6 @@ import com.miguel.moviesapp.data.pagingsource.MoviesPagingSource
 import com.miguel.moviesapp.data.pagingsource.SeriesPagingSource
 import com.miguel.moviesapp.room.dao.MoviesDao
 import com.miguel.moviesapp.room.dao.SeriesDao
-import com.miguel.moviesapp.room.pagingsource.RoomMoviePagingSource
-import com.miguel.moviesapp.room.pagingsource.RoomSeriesPagingSource
 import com.miguel.moviesapp.ui.filters.SeriesFilter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,20 +37,10 @@ class AppRepository @Inject constructor(
             }
         ).liveData
 
-    fun searchFavoriteMovies(filter: MovieFilter) =
-        Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                maxSize = 200,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                RoomMoviePagingSource(
-                    moviesDao,
-                    filter
-                )
-            }
-        ).liveData
+    fun searchFavoriteMovies(filter: MovieFilter) : LiveData<List<Movie>> {
+        if(filter.query!=null) return moviesDao.findByTitle(filter.query)
+        return moviesDao.getAll()
+    }
 
     fun searchSeries(filter: SeriesFilter) =
         Pager(
@@ -68,20 +57,11 @@ class AppRepository @Inject constructor(
             }
         ).liveData
 
-    fun searchFavoriteSeries(filter: SeriesFilter) =
-        Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                maxSize = 200,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                RoomSeriesPagingSource(
-                    seriesDao,
-                    filter
-                )
-            }
-        ).liveData
+
+    fun searchFavoriteSeries(filter: SeriesFilter) : LiveData<List<Serie>> {
+        if(filter.query!=null) return seriesDao.findByTitle(filter.query)
+        return seriesDao.getAll()
+    }
 
     suspend fun insertMovie(movie: Movie) = moviesDao.insert(movie)
     suspend fun deleteMovie(movie: Movie) = moviesDao.delete(movie)

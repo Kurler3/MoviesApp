@@ -2,6 +2,7 @@ package com.miguel.moviesapp.ui.series
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +13,9 @@ import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
 import com.miguel.moviesapp.databinding.SerieItemLayoutBinding
+import com.miguel.moviesapp.room.onFavorableItemsLongClicked
 
-class SeriesAdapter : PagingDataAdapter<Serie, SeriesAdapter.SerieViewHolder>(
+class SeriesAdapter(private val listener: onFavorableItemsLongClicked) : PagingDataAdapter<Serie, SeriesAdapter.SerieViewHolder>(
     SERIE_COMPARATOR
 ) {
 
@@ -30,6 +32,24 @@ class SeriesAdapter : PagingDataAdapter<Serie, SeriesAdapter.SerieViewHolder>(
                     .into(imageViewSerie)
 
                 textViewSerie.text = serie.name
+            }
+
+            itemView.setOnLongClickListener {
+                // Create an alert dialog
+                val builder = AlertDialog.Builder(it.context)
+                    .setTitle("Add This Series To Favorites")
+                    .setMessage("Are you sure you want to add this series to your favorite movies list?")
+                    .setPositiveButton("Confirm") { dialog, _ ->
+                        // Notify the interface implementer
+                        listener.onSerieAddedToFavorites(getItem(layoutPosition))
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                builder.create().show()
+
+                true
             }
         }
     }

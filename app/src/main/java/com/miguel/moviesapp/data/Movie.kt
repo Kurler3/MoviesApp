@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Entity(tableName = "movies_table")
 @Parcelize
@@ -19,8 +20,9 @@ data class Movie (
     @ColumnInfo(name = "popularity") val popularity: Float,
     @ColumnInfo(name = "vote_average") val vote_average: Float,
     val has_video: Boolean,
-    @ColumnInfo(name = "region") val region: String,
-    @ColumnInfo(name = "include_adult") val include_adult: Boolean
+    @ColumnInfo(name = "region") val region: String?,
+    @ColumnInfo(name = "include_adult") val include_adult: Boolean,
+    //@ColumnInfo(name = "date_added") var dateAddedToDatabase : Date
     ) : Parcelable {
     val posterURL get() = "https://image.tmdb.org/t/p/original${poster_path}"
     }

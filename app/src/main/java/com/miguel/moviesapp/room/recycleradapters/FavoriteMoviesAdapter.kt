@@ -2,9 +2,11 @@ package com.miguel.moviesapp.room.recycleradapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -12,8 +14,11 @@ import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
 
-class FavoriteMoviesAdapter : PagingDataAdapter<Movie, FavoriteMoviesAdapter.FavoriteMoviesViewHolder>(MOVIE_COMPARATOR) {
+class FavoriteMoviesAdapter :
+    ListAdapter<Movie,FavoriteMoviesAdapter.FavoriteMoviesViewHolder>(MOVIE_COMPARATOR) {
 
+
+    private var movies: List<Movie> = listOf()
 
     class FavoriteMoviesViewHolder(private val binding: MovieItemLayoutBinding)
         : RecyclerView.ViewHolder(binding.root) {
@@ -45,7 +50,8 @@ class FavoriteMoviesAdapter : PagingDataAdapter<Movie, FavoriteMoviesAdapter.Fav
     }
 
     override fun onBindViewHolder(holder: FavoriteMoviesViewHolder, position: Int) {
-        val movie = getItem(position)
+        val movie = movies[position]
+
 
         if(movie!=null) holder.bind(movie)
     }
@@ -55,5 +61,12 @@ class FavoriteMoviesAdapter : PagingDataAdapter<Movie, FavoriteMoviesAdapter.Fav
             MovieItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return FavoriteMoviesViewHolder(binding)
+    }
+
+    override fun getItemCount(): Int = movies.size
+
+    fun setMovies(movies: List<Movie>) {
+        this.movies = movies
+        notifyDataSetChanged()
     }
 }

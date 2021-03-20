@@ -39,7 +39,9 @@ object AppModule {
         app,
         AppDatabase::class.java,
         "AppDatabase"
-    ).build() // The reason we can construct a database for the repo
+    )
+        .fallbackToDestructiveMigration()
+        .build() // The reason we can construct a database for the repo
 
     @Singleton
     @Provides

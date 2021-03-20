@@ -11,7 +11,7 @@ import com.miguel.moviesapp.room.dao.SeriesDao
 
 @Database(
     entities = [Movie::class, Serie::class],
-    version = 1
+    version = 4
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase(){

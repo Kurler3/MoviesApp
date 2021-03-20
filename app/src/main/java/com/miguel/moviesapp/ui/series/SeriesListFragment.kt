@@ -11,15 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.google.android.material.snackbar.Snackbar
 import com.miguel.moviesapp.R
+import com.miguel.moviesapp.data.Movie
+import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.databinding.SeriesListLayoutBinding
+import com.miguel.moviesapp.room.onFavorableItemsLongClicked
 import com.miguel.moviesapp.ui.AppLoadStateAdapter
 import com.miguel.moviesapp.ui.filters.SeriesFilter
 import com.miguel.moviesapp.ui.filters.SeriesFilterFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SeriesListFragment: Fragment(R.layout.series_list_layout) {
+class SeriesListFragment: Fragment(R.layout.series_list_layout),
+onFavorableItemsLongClicked{
 
     private val viewModel by viewModels<SeriesViewModel>()
 
@@ -41,7 +46,7 @@ class SeriesListFragment: Fragment(R.layout.series_list_layout) {
 
         _binding = SeriesListLayoutBinding.bind(view)
 
-        val seriesAdapter = SeriesAdapter()
+        val seriesAdapter = SeriesAdapter(this)
 
         binding.apply {
             seriesRecyclerView.apply {
@@ -141,5 +146,33 @@ class SeriesListFragment: Fragment(R.layout.series_list_layout) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onMovieAddedToFavorites(movie: Movie?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMovieRemovedFromFavorites(movie: Movie?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSerieAddedToFavorites(serie: Serie?) {
+        // Adds it to the room database through the favorites view model
+        if(serie!=null) {
+            viewModel.addSeriesToFavorites(serie)
+
+            // Show some toast message
+            val snackbar = Snackbar.make(requireView(), "Serie: ${serie!!.name} added to Favorites!",
+                Snackbar.LENGTH_LONG)
+            snackbar.setAction("Ok") {
+                snackbar.dismiss()
+            }
+            snackbar.show()
+        }
+
+    }
+
+    override fun onSerieRemovedFromFavorites(serie: Serie?) {
+        TODO("Not yet implemented")
     }
 }
