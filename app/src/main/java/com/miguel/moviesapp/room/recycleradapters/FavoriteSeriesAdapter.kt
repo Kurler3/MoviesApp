@@ -2,24 +2,26 @@ package com.miguel.moviesapp.room.recycleradapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingData
-import androidx.paging.PagingDataAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.miguel.moviesapp.R
-import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
-import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
 import com.miguel.moviesapp.databinding.SerieItemLayoutBinding
+import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
+import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 
-class FavoriteSeriesAdapter : ListAdapter<Serie, FavoriteSeriesAdapter.FavoriteSeriesViewHolder>(SERIE_COMPARATOR) {
+class FavoriteSeriesAdapter(
+    private val onLongClickListener: onMovieSeriesLongClicked,
+    private val onClickListener: OnMovieSeriesClickListener
+    ) : ListAdapter<Serie, FavoriteSeriesAdapter.FavoriteSeriesViewHolder>(SERIE_COMPARATOR) {
 
     private var series : List<Serie> = listOf()
 
-    class FavoriteSeriesViewHolder(private val binding: SerieItemLayoutBinding)
+    inner class FavoriteSeriesViewHolder(private val binding: SerieItemLayoutBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(serie: Serie){
@@ -33,9 +35,30 @@ class FavoriteSeriesAdapter : ListAdapter<Serie, FavoriteSeriesAdapter.FavoriteS
 
                 textViewSerie.text = serie.name
             }
+
+            itemView.setOnClickListener {
+                onClickListener.onSeriesClicked(series[layoutPosition])
+            }
+
+            itemView.setOnLongClickListener {
+                // Create an alert dialog
+                val builder = AlertDialog.Builder(it.context)
+                    .setTitle("Remove This Series From Favorites")
+                    .setMessage("Are you sure you want to remove this series from your favorite series list?")
+                    .setPositiveButton("Confirm") { _, _ ->
+                        // Notify the interface implementer
+                        onLongClickListener.onSerieRemovedFromFavorites(series[layoutPosition])
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                builder.create().show()
+
+                true
+            }
         }
 
-        // Have to set an on long item click listener for removing items
         }
 
     companion object {
@@ -64,5 +87,9 @@ class FavoriteSeriesAdapter : ListAdapter<Serie, FavoriteSeriesAdapter.FavoriteS
     fun setSeries(series: List<Serie>) {
         this.series = series
         notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int {
+        return series.size
     }
 }

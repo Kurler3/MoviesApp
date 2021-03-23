@@ -7,27 +7,32 @@
     android:orientation="horizontal"
     android:layout_marginBottom="12dp">
 
-    <ImageView
-        android:id="@+id/image_view_movie"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        />
-
     <RelativeLayout
-        android:id="@+id/view_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/dark_grey"
-        android:layout_below="@id/image_view_movie">
-    <TextView
-        android:id="@+id/text_view_movie"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/white"
-        tools:text="Example title"/>
+        android:background="@drawable/round_borders">
+        <ImageView
+            android:id="@+id/image_view_movie"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/view_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bottom_rounded_borders"
+            android:layout_below="@id/image_view_movie">
+            <TextView
+                android:id="@+id/text_view_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                tools:text="Example title"/>
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

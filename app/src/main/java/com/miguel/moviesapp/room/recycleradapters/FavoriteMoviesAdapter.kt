@@ -2,9 +2,7 @@ package com.miguel.moviesapp.room.recycleradapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import androidx.paging.PagingData
-import androidx.paging.PagingDataAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,14 +11,17 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
+import com.miguel.moviesapp.room.onMovieSeriesLongClicked
+import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 
-class FavoriteMoviesAdapter :
+class FavoriteMoviesAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
+                            private val onClickListener: OnMovieSeriesClickListener) :
     ListAdapter<Movie,FavoriteMoviesAdapter.FavoriteMoviesViewHolder>(MOVIE_COMPARATOR) {
 
 
     private var movies: List<Movie> = listOf()
 
-    class FavoriteMoviesViewHolder(private val binding: MovieItemLayoutBinding)
+    inner class FavoriteMoviesViewHolder(private val binding: MovieItemLayoutBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie : Movie){
@@ -34,9 +35,30 @@ class FavoriteMoviesAdapter :
 
                 textViewMovie.text = movie.title
             }
+
+            itemView.setOnClickListener {
+                onClickListener.onMovieClicked(movies[layoutPosition])
+            }
+
+            itemView.setOnLongClickListener {
+                // Create an alert dialog
+                val builder = AlertDialog.Builder(it.context)
+                    .setTitle("Remove This Movie From Favorites")
+                    .setMessage("Are you sure you want to remove this movie from your favorite movies list?")
+                    .setPositiveButton("Confirm") { dialog, _ ->
+                        // Notify the interface implementer
+                        onLongClickListener.onMovieRemovedFromFavorites(movies[layoutPosition])
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                builder.create().show()
+
+                true
+            }
         }
 
-        // Have to set an on long item click listener for removing items
         }
 
     companion object {

@@ -17,14 +17,16 @@ import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
-import com.miguel.moviesapp.room.onFavorableItemsLongClicked
+import com.miguel.moviesapp.room.onMovieSeriesLongClicked
+import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 import com.miguel.moviesapp.ui.AppLoadStateAdapter
 import com.miguel.moviesapp.ui.filters.FilterFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
-class MoviesListFragment : Fragment(R.layout.movies_list_layout), onFavorableItemsLongClicked{
+class MoviesListFragment : Fragment(R.layout.movies_list_layout), onMovieSeriesLongClicked,
+    OnMovieSeriesClickListener
+{
 
     private val moviesViewModel by viewModels<MoviesViewModel>()
 
@@ -32,8 +34,10 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout), onFavorableIte
 
     private val binding get() = _binding!!
 
-    private var currentFilter = MovieFilter(null, "en-US",
+    private var currentFilter = MovieFilter(null, null,
             true, null, null)
+
+    private var filterExists = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +49,9 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout), onFavorableIte
 
         _binding = MoviesListLayoutBinding.bind(view)
 
-        val movieAdapter = MoviesAdapter(this)
+        val movieAdapter = MoviesAdapter(this, this)
+
+        val movieWithFilterAdapter = MoviesWithFilterAdapter(this, this)
 
         binding.apply {
             moviesRecyclerView.apply {
@@ -83,12 +89,52 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout), onFavorableIte
             }
         }
 
+        movieWithFilterAdapter.addLoadStateListener { loadState ->
+            binding.apply {
+                // Check if its still loading or not
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                // Load state is finished and everything went well so the recycler view should be visible
+                moviesRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                // If something went wrong (example: no internet connection)
+                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                textViewError.isVisible = loadState.source.refresh is LoadState.Error
+
+                // Check if its not loading and there is no error at the same time == No results
+                if(loadState.source.refresh is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached &&
+                    movieWithFilterAdapter.itemCount < 1){
+                    moviesRecyclerView.isVisible = false
+                    textViewEmpty.isVisible = true
+                }else {
+                    textViewEmpty.isVisible = false
+                }
+            }
+        }
+
         // Receiving changes for when the filter is changed in the MovieFilterFragment.kt
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<MovieFilter>(FilterFragment.CURRENT_MOVIE_FILTER)?.observe(
                 viewLifecycleOwner) { newFilter ->
             // Update the current filter
             currentFilter = newFilter
             moviesViewModel.searchMovies(currentFilter)
+
+            // Should display the filters if any, and also display the entire fragment in a different way
+            // Meaning, changing the adapter of the recycler view and layout manager
+
+
+            binding.apply {
+
+            }
+
+
+            // Also need to change back to normal non-filter view if there was a filter and now there isn't
+            if(filterExists) {
+                // Change back to the other adapter and make views invisible
+                // Make the layout manager of the recyclerview back to grid
+
+
+                filterExists = false
+            }
         }
     }
 
@@ -171,4 +217,15 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout), onFavorableIte
     override fun onSerieRemovedFromFavorites(serie: Serie?) {
         TODO("Not yet implemented")
     }
+
+    override fun onMovieClicked(movie: Movie?) {
+        // Navigates to the fragment that displays the movie
+        if(movie!=null){
+            val action = MoviesListFragmentDirections.actionMoviesListFragmentToMovieSerieFragment(movie, null)
+            findNavController().navigate(action)
+        }
+    }
+    // Doesn't need to be implemented here
+    override fun onSeriesClicked(series: Serie?) {}
+
 }

@@ -16,15 +16,16 @@ import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.databinding.SeriesListLayoutBinding
-import com.miguel.moviesapp.room.onFavorableItemsLongClicked
+import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 import com.miguel.moviesapp.ui.AppLoadStateAdapter
 import com.miguel.moviesapp.ui.filters.SeriesFilter
 import com.miguel.moviesapp.ui.filters.SeriesFilterFragment
+import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SeriesListFragment: Fragment(R.layout.series_list_layout),
-onFavorableItemsLongClicked{
+onMovieSeriesLongClicked, OnMovieSeriesClickListener{
 
     private val viewModel by viewModels<SeriesViewModel>()
 
@@ -46,7 +47,7 @@ onFavorableItemsLongClicked{
 
         _binding = SeriesListLayoutBinding.bind(view)
 
-        val seriesAdapter = SeriesAdapter(this)
+        val seriesAdapter = SeriesAdapter(this, this)
 
         binding.apply {
             seriesRecyclerView.apply {
@@ -174,5 +175,17 @@ onFavorableItemsLongClicked{
 
     override fun onSerieRemovedFromFavorites(serie: Serie?) {
         TODO("Not yet implemented")
+    }
+
+    // No Need to implement
+    override fun onMovieClicked(movie: Movie?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSeriesClicked(series: Serie?) {
+        if(series!=null) {
+            val action = SeriesListFragmentDirections.actionSeriesListFragmentToMovieSerieFragment(null, series)
+            findNavController().navigate(action)
+        }
     }
 }

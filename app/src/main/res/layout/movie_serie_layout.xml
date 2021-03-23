@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/grey"
+    tools:context=".ui.movies.MovieSerieFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/image_relative_layout"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            >
+
+            <ImageView
+                android:id="@+id/poster_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/title_text_view"
+                android:layout_width="match_parent"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                tools:text="Fury"
+                android:layout_centerHorizontal="true"
+                android:textSize="30dp"
+                android:textColor="@color/white"
+                />
+            <TextView
+                android:id="@+id/release_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Release Date: 14-10-2014"
+                android:layout_below="@id/title_text_view"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:padding="8dp"/>
+            <TextView
+                android:id="@+id/genres_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Genre: Action, Drama, War"
+                android:textAlignment="center"
+                android:layout_below="@id/release_date_text_view"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:padding="8dp"/>
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/genres_text_view"
+                android:layout_centerHorizontal="true"
+                android:isIndicator="true"
+                android:stepSize="0.1"
+                style="?android:attr/ratingBarStyleIndicator"
+                android:layout_marginTop="10dp"
+                android:theme="@style/RatingBar"
+                />
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+            <TextView
+                android:id="@+id/summary_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Summary"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:padding="8dp"/>
+            <TextView
+                android:id="@+id/description_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Example description"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:layout_below="@id/summary_title"
+                android:padding="8dp"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

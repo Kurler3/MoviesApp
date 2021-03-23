@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.miguel.moviesapp.R
-import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
-import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
 import com.miguel.moviesapp.databinding.SerieItemLayoutBinding
-import com.miguel.moviesapp.room.onFavorableItemsLongClicked
+import com.miguel.moviesapp.room.onMovieSeriesLongClicked
+import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 
-class SeriesAdapter(private val listener: onFavorableItemsLongClicked) : PagingDataAdapter<Serie, SeriesAdapter.SerieViewHolder>(
+class SeriesAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
+                    private val onClickListener: OnMovieSeriesClickListener) : PagingDataAdapter<Serie, SeriesAdapter.SerieViewHolder>(
     SERIE_COMPARATOR
 ) {
 
@@ -34,6 +34,10 @@ class SeriesAdapter(private val listener: onFavorableItemsLongClicked) : PagingD
                 textViewSerie.text = serie.name
             }
 
+            itemView.setOnClickListener {
+                onClickListener.onSeriesClicked(getItem(layoutPosition))
+            }
+
             itemView.setOnLongClickListener {
                 // Create an alert dialog
                 val builder = AlertDialog.Builder(it.context)
@@ -41,7 +45,7 @@ class SeriesAdapter(private val listener: onFavorableItemsLongClicked) : PagingD
                     .setMessage("Are you sure you want to add this series to your favorite movies list?")
                     .setPositiveButton("Confirm") { dialog, _ ->
                         // Notify the interface implementer
-                        listener.onSerieAddedToFavorites(getItem(layoutPosition))
+                        onLongClickListener.onSerieAddedToFavorites(getItem(layoutPosition))
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
                         dialog.dismiss()

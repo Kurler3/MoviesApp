@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:background="@drawable/white_borders_dark_grey_background">
+
+    <ImageView
+        android:id="@+id/poster_image"
+        android:layout_width="100dp"
+        android:layout_height="150dp"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Joker"
+            android:textColor="@color/white"
+            android:textSize="20dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/imbd_icon"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                app:srcCompat="@mipmap/imdb_icon_final" />
+            <TextView
+                android:id="@+id/imdb_rate_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="6.7"
+
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:layout_toRightOf="@id/imbd_icon"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Release Date: 20-09-2012"
+                android:textColor="@color/light_grey"
+                android:layout_toRightOf="@id/imdb_rate_text_view"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/genres_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Crime, Drama, Fantasy"
+            android:textColor="@color/light_grey"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"/>
+    </LinearLayout>
+</LinearLayout>

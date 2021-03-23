@@ -1,9 +1,7 @@
 package com.miguel.moviesapp.ui.movies
 
-import android.content.DialogInterface
 import android.view.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.PopupMenu
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,10 +10,11 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.databinding.MovieItemLayoutBinding
-import com.miguel.moviesapp.room.onFavorableItemsLongClicked
-import kotlin.coroutines.coroutineContext
+import com.miguel.moviesapp.room.onMovieSeriesLongClicked
+import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 
-class MoviesAdapter(private val listener: onFavorableItemsLongClicked) : PagingDataAdapter<Movie, MoviesAdapter.MovieViewHolder>(
+class MoviesAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
+                    private val onClickListener : OnMovieSeriesClickListener) : PagingDataAdapter<Movie, MoviesAdapter.MovieViewHolder>(
     MOVIE_COMPARATOR
 ) {
 
@@ -34,6 +33,10 @@ class MoviesAdapter(private val listener: onFavorableItemsLongClicked) : PagingD
                 textViewMovie.text = movie.title
             }
 
+            itemView.setOnClickListener {
+                onClickListener.onMovieClicked(getItem(layoutPosition))
+            }
+
             itemView.setOnLongClickListener {
                 // Create an alert dialog
                 val builder = AlertDialog.Builder(it.context)
@@ -41,7 +44,7 @@ class MoviesAdapter(private val listener: onFavorableItemsLongClicked) : PagingD
                     .setMessage("Are you sure you want to add this movie to your favorite movies list?")
                     .setPositiveButton("Confirm") { dialog, _ ->
                         // Notify the interface implementer
-                        listener.onMovieAddedToFavorites(getItem(layoutPosition))
+                        onLongClickListener.onMovieAddedToFavorites(getItem(layoutPosition))
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
                         dialog.dismiss()

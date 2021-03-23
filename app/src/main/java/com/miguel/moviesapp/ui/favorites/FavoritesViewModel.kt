@@ -20,22 +20,15 @@ class FavoritesViewModel @ViewModelInject constructor(
     private var currentMovieTitleQuery = MutableLiveData(DEFAULT_MOVIE_TITLE_QUERY)
     private var currentSeriesTitleQuery  =  MutableLiveData(DEFAULT_SERIES_TITLE_QUERY)
 
-    /*
-    fun insertMovie(movie: Movie) = viewModelScope.launch{
-        repository.insertMovie(movie)
-    }
+
     fun deleteMovie(movie: Movie) = viewModelScope.launch {
         repository.deleteMovie(movie)
     }
 
-    fun insertSerie(serie: Serie) = viewModelScope.launch{
-        repository.insertSerie(serie)
-    }
     fun deleteSerie(serie: Serie) = viewModelScope.launch {
         repository.deleteSerie(serie)
     }
 
-     */
 
     val favoriteMovies = currentMovieTitleQuery.switchMap { filter ->
         repository.searchFavoriteMovies(filter)

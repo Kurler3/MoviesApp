@@ -3,7 +3,7 @@ package com.miguel.moviesapp.room
 import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
 
-interface onFavorableItemsLongClicked {
+interface onMovieSeriesLongClicked {
 
     fun onMovieAddedToFavorites(movie: Movie?)
     fun onMovieRemovedFromFavorites(movie: Movie?)

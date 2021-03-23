@@ -45,4 +45,14 @@ interface AppAPI {
             @Query("language") language: String?
     ) : SeriesApiResponse
 
+    @GET("genre/movie/list")
+    suspend fun searchMoviesGenres(
+        @Query("api_key") apiKey: String,
+    ) : MoviesGenresApiResponse
+
+    @GET("genre/tv/list")
+    suspend fun searchSeriesGenres(
+        @Query("api_key") apiKey: String,
+    ) : SeriesGenresApiResponse
+
 }

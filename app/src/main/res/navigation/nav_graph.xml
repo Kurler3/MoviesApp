@@ -12,7 +12,18 @@
         tools:layout="@layout/movies_list_layout" >
         <action
             android:id="@+id/action_moviesListFragment_to_movieFilterFragment"
-            app:destination="@id/movieFilterFragment" />
+            app:destination="@id/movieFilterFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_moviesListFragment_to_movieSerieFragment"
+            app:destination="@id/movieSerieFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/movieFilterFragment"
@@ -30,7 +41,18 @@
         tools:layout="@layout/series_list_layout" >
         <action
             android:id="@+id/action_seriesListFragment_to_seriesFilterFragment"
-            app:destination="@id/seriesFilterFragment" />
+            app:destination="@id/seriesFilterFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_seriesListFragment_to_movieSerieFragment"
+            app:destination="@id/movieSerieFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/seriesFilterFragment"
@@ -45,5 +67,26 @@
         android:id="@+id/favoritesFragment"
         android:name="com.miguel.moviesapp.ui.favorites.FavoritesFragment"
         android:label="Favorites"
-        tools:layout="@layout/favorites_fragment_layout" />
+        tools:layout="@layout/favorites_fragment_layout" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_movieSerieFragment"
+            app:destination="@id/movieSerieFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieSerieFragment"
+        android:name="com.miguel.moviesapp.ui.movies.MovieSerieFragment"
+        tools:layout="@layout/movie_serie_layout" >
+        <argument
+            android:name="movie"
+            app:argType="com.miguel.moviesapp.data.Movie"
+            app:nullable="true" />
+        <argument
+            android:name="series"
+            app:argType="com.miguel.moviesapp.data.Serie"
+            app:nullable="true" />
+    </fragment>
 </navigation>
