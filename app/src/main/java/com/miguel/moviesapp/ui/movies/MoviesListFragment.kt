@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
@@ -20,8 +21,10 @@ import com.miguel.moviesapp.databinding.MoviesListLayoutBinding
 import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 import com.miguel.moviesapp.ui.AppLoadStateAdapter
+
 import com.miguel.moviesapp.ui.filters.FilterFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.reflect.full.memberProperties
 
 @AndroidEntryPoint
 class MoviesListFragment : Fragment(R.layout.movies_list_layout), onMovieSeriesLongClicked,
@@ -65,6 +68,7 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout), onMovieSeriesL
 
         moviesViewModel.movies.observe(viewLifecycleOwner) {
             movieAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            movieWithFilterAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         movieAdapter.addLoadStateListener { loadState ->
@@ -120,12 +124,34 @@ class MoviesListFragment : Fragment(R.layout.movies_list_layout), onMovieSeriesL
 
             // Should display the filters if any, and also display the entire fragment in a different way
             // Meaning, changing the adapter of the recycler view and layout manager
+            if(currentFilter.country!=null || currentFilter.year!=null || currentFilter.includeAdult!=true){
+                var filterDetails = ""
+
+                for (prop in MovieFilter::class.memberProperties) {
+                    println("${prop.name} = ${prop.get(currentFilter)}")
+
+                    if(prop.get(currentFilter) != null && prop.get(currentFilter)!=true) {
+                        filterDetails += " ${prop.get(currentFilter)},"
+                    }
+                }
+
+                filterDetails = filterDetails.dropLast(1)
 
 
-            binding.apply {
+                binding.apply {
+                    filterDetailsTextView.text = filterDetails
 
+                    moviesRecyclerView.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = movieWithFilterAdapter.withLoadStateHeaderAndFooter(
+                            header = AppLoadStateAdapter{movieWithFilterAdapter.retry()},
+                            footer = AppLoadStateAdapter{movieWithFilterAdapter.retry()}
+                        )
+                    }
+
+                    filterDetailsTextView.isVisible = true
+                }
             }
-
 
             // Also need to change back to normal non-filter view if there was a filter and now there isn't
             if(filterExists) {

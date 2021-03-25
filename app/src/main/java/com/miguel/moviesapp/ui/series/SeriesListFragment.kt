@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
@@ -21,7 +22,9 @@ import com.miguel.moviesapp.ui.AppLoadStateAdapter
 import com.miguel.moviesapp.ui.filters.SeriesFilter
 import com.miguel.moviesapp.ui.filters.SeriesFilterFragment
 import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
+import com.miguel.moviesapp.ui.filters.MovieFilter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.reflect.full.memberProperties
 
 @AndroidEntryPoint
 class SeriesListFragment: Fragment(R.layout.series_list_layout),
@@ -48,6 +51,7 @@ onMovieSeriesLongClicked, OnMovieSeriesClickListener{
         _binding = SeriesListLayoutBinding.bind(view)
 
         val seriesAdapter = SeriesAdapter(this, this)
+        val seriesWithFilterAdapter = SeriesWithFilterAdapter(this, this)
 
         binding.apply {
             seriesRecyclerView.apply {
@@ -61,6 +65,7 @@ onMovieSeriesLongClicked, OnMovieSeriesClickListener{
 
         viewModel.series.observe(viewLifecycleOwner) {
             seriesAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            seriesWithFilterAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         seriesAdapter.addLoadStateListener { loadState ->
@@ -85,15 +90,66 @@ onMovieSeriesLongClicked, OnMovieSeriesClickListener{
             }
         }
 
+        seriesWithFilterAdapter.addLoadStateListener { loadState ->
+            binding.apply {
+                // Check if its still loading or not
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                // Load state is finished and everything went well so the recycler view should be visible
+                seriesRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                // If something went wrong (example: no internet connection)
+                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                textViewError.isVisible = loadState.source.refresh is LoadState.Error
+
+                // Check if its not loading and there is no error at the same time == No results
+                if(loadState.source.refresh is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached &&
+                    seriesAdapter.itemCount < 1){
+                    seriesRecyclerView.isVisible = false
+                    textViewEmpty.isVisible = true
+                }else {
+                    textViewEmpty.isVisible = false
+                }
+            }
+        }
+
         // Receiving changes for when the filter is changed in the SeriesFilterFragment
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<SeriesFilter>(SeriesFilterFragment.CURRENT_SERIES_FILTER)?.observe(
                 viewLifecycleOwner) { newFilter ->
             // Update the current filter
             currentFilter = newFilter
             viewModel.searchSeries(currentFilter)
+
+            // Should display the filters if any, and also display the entire fragment in a different way
+            // Meaning, changing the adapter of the recycler view and layout manager
+            if (currentFilter.firstAiredYear != null || currentFilter.includeAdult != true) {
+                var filterDetails = ""
+
+                for (prop in SeriesFilter::class.memberProperties) {
+                    println("${prop.name} = ${prop.get(currentFilter)}")
+
+                    if (prop.get(currentFilter) != null && prop.get(currentFilter) != true) {
+                        filterDetails += " ${prop.get(currentFilter)},"
+                    }
+                }
+
+                filterDetails = filterDetails.dropLast(1)
+
+
+                binding.apply {
+                    filterDetailsTextView.text = filterDetails
+
+                    seriesRecyclerView.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = seriesWithFilterAdapter.withLoadStateHeaderAndFooter(
+                            header = AppLoadStateAdapter { seriesWithFilterAdapter.retry() },
+                            footer = AppLoadStateAdapter { seriesWithFilterAdapter.retry() }
+                        )
+                    }
+
+                    filterDetailsTextView.isVisible = true
+                }
+            }
         }
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -159,12 +215,13 @@ onMovieSeriesLongClicked, OnMovieSeriesClickListener{
 
     override fun onSerieAddedToFavorites(serie: Serie?) {
         // Adds it to the room database through the favorites view model
-        if(serie!=null) {
+        if (serie != null) {
             viewModel.addSeriesToFavorites(serie)
 
             // Show some toast message
-            val snackbar = Snackbar.make(requireView(), "Serie: ${serie!!.name} added to Favorites!",
-                Snackbar.LENGTH_LONG)
+            val snackbar =
+                Snackbar.make(requireView(), "Serie: ${serie!!.name} added to Favorites!",
+                    Snackbar.LENGTH_LONG)
             snackbar.setAction("Ok") {
                 snackbar.dismiss()
             }

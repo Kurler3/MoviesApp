@@ -1,4 +1,4 @@
-package com.miguel.moviesapp.ui.movies
+package com.miguel.moviesapp.ui.series
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,46 +9,46 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.miguel.moviesapp.R
-import com.miguel.moviesapp.data.Movie
+import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.databinding.MovieSerieItemWithFilterLayoutBinding
 import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 
-class MoviesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
-private val onClickListener: OnMovieSeriesClickListener) :
-    PagingDataAdapter<Movie, MoviesWithFilterAdapter.MoviesWithFilterViewHolder>(MOVIE_COMPARATOR) {
+class SeriesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
+                              private val onClickListener: OnMovieSeriesClickListener) :
+    PagingDataAdapter<Serie, SeriesWithFilterAdapter.SeriesWithFilterViewHolder>(SERIES_COMPARATOR) {
 
-    inner class MoviesWithFilterViewHolder(private val binding: MovieSerieItemWithFilterLayoutBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(movie: Movie) {
+    inner class SeriesWithFilterViewHolder(private val binding: MovieSerieItemWithFilterLayoutBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bind(serie: Serie) {
             binding.apply {
                 Glide.with(itemView)
-                    .load(movie.posterURL)
+                    .load(serie.posterURL)
                     .centerCrop()
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error)
                     .into(posterImage)
 
-                titleTextView.text = movie.title
+                titleTextView.text = serie.name
 
-                imdbRateTextView.text = (movie.vote_average / 2).toString()
+                imdbRateTextView.text = (serie.vote_average / 2).toString()
 
-                releaseDate.text = "Release Date: ${movie.release_date}"
+                releaseDate.text = "Release Date: ${serie.first_air_date}"
 
                 // Genres missing
                 genresTextView.text = "Genres:"
 
                 itemView.setOnClickListener {
-                    onClickListener.onMovieClicked(getItem(layoutPosition))
+                    onClickListener.onSeriesClicked(getItem(layoutPosition))
                 }
 
                 itemView.setOnLongClickListener {
                     // Create an alert dialog
                     val builder = AlertDialog.Builder(it.context)
-                        .setTitle("Add This Movie To Favorites")
-                        .setMessage("Are you sure you want to add this movie to your favorite movies list?")
+                        .setTitle("Add This Series To Favorites")
+                        .setMessage("Are you sure you want to add this series to your favorite series list?")
                         .setPositiveButton("Confirm") { dialog, _ ->
                             // Notify the interface implementer
-                            onLongClickListener.onMovieAddedToFavorites(getItem(layoutPosition))
+                            onLongClickListener.onSerieAddedToFavorites(getItem(layoutPosition))
                         }
                         .setNegativeButton("Cancel") { dialog, _ ->
                             dialog.dismiss()
@@ -63,24 +63,24 @@ private val onClickListener: OnMovieSeriesClickListener) :
     }
 
     companion object {
-        private val MOVIE_COMPARATOR = object : DiffUtil.ItemCallback<Movie>(){
-            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+        private val SERIES_COMPARATOR = object : DiffUtil.ItemCallback<Serie>(){
+            override fun areItemsTheSame(oldItem: Serie, newItem: Serie): Boolean =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+            override fun areContentsTheSame(oldItem: Serie, newItem: Serie): Boolean =
                 oldItem == newItem
         }
     }
 
-    override fun onBindViewHolder(holder: MoviesWithFilterViewHolder, position: Int) {
-        var movie = getItem(position)
+    override fun onBindViewHolder(holder: SeriesWithFilterViewHolder, position: Int) {
+        var series = getItem(position)
 
-        if(movie!=null) holder.bind(movie)
+        if(series!=null) holder.bind(series)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesWithFilterViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesWithFilterViewHolder {
         val binding = MovieSerieItemWithFilterLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return MoviesWithFilterViewHolder(binding)
+        return SeriesWithFilterViewHolder(binding)
     }
 }

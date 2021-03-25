@@ -14,30 +14,18 @@
         tools:text="France, 2019"
         tools:visibility="visible"
         android:visibility="gone"
-        android:padding="30dp"
+        android:padding="8dp"
         android:textSize="18dp"
         android:textColor="@color/white"
         android:background="@drawable/white_borders_dark_grey_background"
         />
-    <TextView
-        android:id="@+id/number_results_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="300 Results"
-        tools:visibility="visible"
-        android:visibility="gone"
-        android:textSize="18dp"
-        android:padding="30dp"
-        android:textColor="@color/white"
-        android:layout_below="@id/filter_details_text_view"
-        android:background="@drawable/white_borders_dark_grey_background"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movies_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/movie_item_layout"
-        android:layout_below="@id/number_results_text_view"
+        android:layout_below="@id/filter_details_text_view"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
         />

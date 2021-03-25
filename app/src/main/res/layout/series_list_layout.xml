@@ -6,11 +6,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.series.SeriesListFragment"
     >
+    <TextView
+        android:id="@+id/filter_details_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="France, 2019"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:padding="8dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:background="@drawable/white_borders_dark_grey_background"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/series_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/filter_details_text_view"
         tools:listitem="@layout/movie_item_layout"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
