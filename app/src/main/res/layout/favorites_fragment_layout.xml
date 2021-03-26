@@ -9,17 +9,32 @@
 
     <TextView
         android:id="@+id/favorites_title_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:text="@string/favorites_title_movies"
         android:layout_centerHorizontal="true"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:textColor="@color/yellow"
-        android:padding="16dp"
+        android:padding="6dp"
+        android:background="@drawable/white_borders_dark_grey_background"
+        />
+    <TextView
+        android:id="@+id/filter_details_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="France, 2019"
+        tools:visibility="visible"
+        android:layout_below="@id/favorites_title_text_view"
+        android:visibility="gone"
+        android:padding="8dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:background="@drawable/white_borders_dark_grey_background"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorites_recycler_view"
-        android:layout_below="@id/favorites_title_text_view"
+        android:layout_below="@id/filter_details_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/movie_item_layout"

@@ -68,13 +68,10 @@
         android:name="com.miguel.moviesapp.ui.favorites.FavoritesFragment"
         android:label="Favorites"
         tools:layout="@layout/favorites_fragment_layout" >
+
         <action
             android:id="@+id/action_favoritesFragment_to_movieSerieFragment"
-            app:destination="@id/movieSerieFragment"
-            app:enterAnim="@anim/slide_up"
-            app:exitAnim="@anim/slide_down"
-            app:popEnterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down" />
+            app:destination="@id/movieSerieFragment" />
     </fragment>
     <fragment
         android:id="@+id/movieSerieFragment"

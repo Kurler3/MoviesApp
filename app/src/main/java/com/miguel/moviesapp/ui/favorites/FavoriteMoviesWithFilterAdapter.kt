@@ -1,10 +1,11 @@
-package com.miguel.moviesapp.ui.movies
+package com.miguel.moviesapp.ui.favorites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -15,11 +16,11 @@ import com.miguel.moviesapp.databinding.MovieSerieItemWithFilterLayoutBinding
 import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 
-class MoviesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
-private val onClickListener: OnMovieSeriesClickListener) :
-    PagingDataAdapter<Movie, MoviesWithFilterAdapter.MoviesWithFilterViewHolder>(MOVIE_COMPARATOR) {
+class FavoriteMoviesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
+                                      private val onClickListener: OnMovieSeriesClickListener) :
+    ListAdapter<Movie, FavoriteMoviesWithFilterAdapter.MoviesWithFilterViewHolder>(MOVIE_COMPARATOR) {
 
-    lateinit var genres: Array<MovieGenres>
+    private var movies: List<Movie> = listOf()
 
     inner class MoviesWithFilterViewHolder(private val binding: MovieSerieItemWithFilterLayoutBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(movie: Movie) {
@@ -39,17 +40,17 @@ private val onClickListener: OnMovieSeriesClickListener) :
 
 
                 itemView.setOnClickListener {
-                    onClickListener.onMovieClicked(getItem(layoutPosition))
+                    onClickListener.onMovieClicked(movies[layoutPosition])
                 }
 
                 itemView.setOnLongClickListener {
                     // Create an alert dialog
                     val builder = AlertDialog.Builder(it.context)
-                        .setTitle("Add This Movie To Favorites")
-                        .setMessage("Are you sure you want to add this movie to your favorite movies list?")
+                        .setTitle("Remove This Movie From Favorites")
+                        .setMessage("Are you sure you want to remove this movie from your favorite movies list?")
                         .setPositiveButton("Confirm") { dialog, _ ->
                             // Notify the interface implementer
-                            onLongClickListener.onMovieAddedToFavorites(getItem(layoutPosition))
+                            onLongClickListener.onMovieRemovedFromFavorites(movies[layoutPosition])
                         }
                         .setNegativeButton("Cancel") { dialog, _ ->
                             dialog.dismiss()
@@ -74,7 +75,7 @@ private val onClickListener: OnMovieSeriesClickListener) :
     }
 
     override fun onBindViewHolder(holder: MoviesWithFilterViewHolder, position: Int) {
-        var movie = getItem(position)
+        var movie = movies[position]
 
         if(movie!=null) holder.bind(movie)
     }
@@ -83,5 +84,11 @@ private val onClickListener: OnMovieSeriesClickListener) :
         val binding = MovieSerieItemWithFilterLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return MoviesWithFilterViewHolder(binding)
+    }
+    override fun getItemCount(): Int = movies.size
+
+    fun setMovies(movies: List<Movie>) {
+        this.movies = movies
+        notifyDataSetChanged()
     }
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import com.miguel.moviesapp.data.AppRepository
 import com.miguel.moviesapp.data.Movie
 import com.miguel.moviesapp.data.Serie
@@ -17,8 +16,8 @@ class FavoritesViewModel @ViewModelInject constructor(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private var currentMovieTitleQuery = MutableLiveData(DEFAULT_MOVIE_TITLE_QUERY)
-    private var currentSeriesTitleQuery  =  MutableLiveData(DEFAULT_SERIES_TITLE_QUERY)
+    private var currentMovieQuery = MutableLiveData(DEFAULT_MOVIE_TITLE_QUERY)
+    private var currentSeriesQuery  =  MutableLiveData(DEFAULT_SERIES_TITLE_QUERY)
 
 
     fun deleteMovie(movie: Movie) = viewModelScope.launch {
@@ -30,19 +29,19 @@ class FavoritesViewModel @ViewModelInject constructor(
     }
 
 
-    val favoriteMovies = currentMovieTitleQuery.switchMap { filter ->
+    val favoriteMovies = currentMovieQuery.switchMap { filter ->
         repository.searchFavoriteMovies(filter)
     }
 
-    val favoriteSeries = currentSeriesTitleQuery.switchMap { filter ->
+    val favoriteSeries = currentSeriesQuery.switchMap { filter ->
         repository.searchFavoriteSeries(filter)
     }
 
-    fun changeCurrentMovieTitleQuery(filter: MovieFilter) {
-        currentMovieTitleQuery.value = filter
+    fun searchFavoriteMovies(filter: MovieFilter) {
+        currentMovieQuery.value = filter
     }
-    fun changeCurrentSerieTitleQuery(filter: SeriesFilter) {
-        currentSeriesTitleQuery.value = filter
+    fun searchFavoriteSeries(filter: SeriesFilter) {
+        currentSeriesQuery.value = filter
     }
 
     companion object {

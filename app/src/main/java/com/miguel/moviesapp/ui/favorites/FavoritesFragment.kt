@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.miguel.moviesapp.R
 import com.miguel.moviesapp.data.Movie
@@ -18,12 +19,16 @@ import com.miguel.moviesapp.databinding.FavoritesFragmentLayoutBinding
 import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 import com.miguel.moviesapp.room.recycleradapters.FavoriteMoviesAdapter
 import com.miguel.moviesapp.room.recycleradapters.FavoriteSeriesAdapter
+import com.miguel.moviesapp.ui.AppLoadStateAdapter
 import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
+import com.miguel.moviesapp.ui.filters.FilterFragment
 import com.miguel.moviesapp.ui.filters.MovieFilter
 import com.miguel.moviesapp.ui.filters.SeriesFilter
-import com.miguel.moviesapp.ui.movies.MoviesListFragmentDirections
-import com.miguel.moviesapp.ui.series.SeriesListFragmentDirections
+import com.miguel.moviesapp.ui.filters.SeriesFilterFragment
+import com.miguel.moviesapp.ui.movies.MoviesWithFilterAdapter
+import com.miguel.moviesapp.ui.series.SeriesWithFilterAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.reflect.full.memberProperties
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment(R.layout.favorites_fragment_layout), onMovieSeriesLongClicked,
@@ -78,18 +83,15 @@ OnMovieSeriesClickListener{
 
         viewModel.favoriteMovies.observe(viewLifecycleOwner) {
             moviesAdapter.setMovies(it)
-
             // Checking if adapters are empty after the adapters were filled with data from Room
             checkIfAdapterEmpty()
         }
 
         viewModel.favoriteSeries.observe(viewLifecycleOwner) {
             seriesAdapter.setSeries(it)
-
             // Checking if adapters are empty after the adapters were filled with data from Room
             checkIfAdapterEmpty()
         }
-
 
     }
 
@@ -108,11 +110,11 @@ OnMovieSeriesClickListener{
                 // This is temporary until I figure out how to use a current MovieFilter object instead
                 if(query!=null){
                     if(displayingMovies){
-                        currentMovieFilter = MovieFilter("%${query}%", null, true, null, null)
-                        viewModel.changeCurrentMovieTitleQuery(currentMovieFilter)
+                        currentMovieFilter = MovieFilter("%${query}%", currentMovieFilter.language, true, currentMovieFilter.country, currentMovieFilter.year)
+                        viewModel.searchFavoriteMovies(currentMovieFilter)
                     }else {
-                        currentSeriesFilter = SeriesFilter("%${query}%", null, true, null)
-                        viewModel.changeCurrentSerieTitleQuery(currentSeriesFilter)
+                        currentSeriesFilter = SeriesFilter("%${query}%", currentSeriesFilter.language, true, currentSeriesFilter.firstAiredYear)
+                        viewModel.searchFavoriteSeries(currentSeriesFilter)
                     }
                 }
                 return true
@@ -121,25 +123,24 @@ OnMovieSeriesClickListener{
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null && newText!="") {
                     if(displayingMovies){
-                        currentMovieFilter = MovieFilter("%${newText}%", null, true, null, null)
-                        viewModel.changeCurrentMovieTitleQuery(currentMovieFilter)
+                        currentMovieFilter = MovieFilter("%${newText}%",  currentMovieFilter.language, true, currentMovieFilter.country, currentMovieFilter.year)
+                        viewModel.searchFavoriteMovies(currentMovieFilter)
                     }else {
-                        currentSeriesFilter = SeriesFilter("%${newText}%", null, true, null)
-                        viewModel.changeCurrentSerieTitleQuery(currentSeriesFilter)
+                        currentSeriesFilter = SeriesFilter("%${newText}%", currentSeriesFilter.language, true, currentSeriesFilter.firstAiredYear)
+                        viewModel.searchFavoriteSeries(currentSeriesFilter)
                     }
                 }
                 // This else ensures that when the text is erased from the search bar it will show the popular
                 // Movies again
                 else{
                     if(displayingMovies){
-                        currentMovieFilter = MovieFilter(null, null, true, null, null)
-                        viewModel.changeCurrentMovieTitleQuery(currentMovieFilter)
+                        currentMovieFilter = MovieFilter(null, currentMovieFilter.language, true, currentMovieFilter.country, currentMovieFilter.year)
+                        viewModel.searchFavoriteMovies(currentMovieFilter)
                     }else {
-                        currentSeriesFilter = SeriesFilter(null, null, true, null)
-                        viewModel.changeCurrentSerieTitleQuery(currentSeriesFilter)
+                        currentSeriesFilter = SeriesFilter(null, currentSeriesFilter.language, true, currentSeriesFilter.firstAiredYear)
+                        viewModel.searchFavoriteSeries(currentSeriesFilter)
                     }
                 }
-
                 return true
             }
         })
@@ -167,9 +168,6 @@ OnMovieSeriesClickListener{
 
                 binding.favoritesRecyclerView.adapter = seriesAdapter
 
-                    /*.withLoadStateHeader(
-                    header = FavoritesLoadStateAdapter(displayingMovies)
-                )*/
                 binding.textViewEmptyFavorites.text = resources.getString(R.string.you_have_no_favorite_series)
 
                 checkIfAdapterEmpty()

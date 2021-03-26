@@ -7,8 +7,8 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
     <item
-        android:title="Filter"
-        android:icon="@drawable/ic_filter"
+        android:title="Swap"
+        android:icon="@drawable/swap_favorites"
         app:showAsAction="ifRoom">
 
         <menu>
@@ -20,4 +20,5 @@
                 android:icon="@drawable/ic_baseline_live_tv_24"/>
         </menu>
     </item>
+
 </menu>

@@ -1,22 +1,27 @@
-package com.miguel.moviesapp.ui.series
+package com.miguel.moviesapp.ui.favorites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.miguel.moviesapp.R
+import com.miguel.moviesapp.data.Movie
+import com.miguel.moviesapp.data.MovieGenres
 import com.miguel.moviesapp.data.Serie
 import com.miguel.moviesapp.databinding.MovieSerieItemWithFilterLayoutBinding
 import com.miguel.moviesapp.room.onMovieSeriesLongClicked
 import com.miguel.moviesapp.ui.OnMovieSeriesClickListener
 
-class SeriesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
-                              private val onClickListener: OnMovieSeriesClickListener) :
-    PagingDataAdapter<Serie, SeriesWithFilterAdapter.SeriesWithFilterViewHolder>(SERIES_COMPARATOR) {
+class FavoriteSeriesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLongClicked,
+                                      private val onClickListener: OnMovieSeriesClickListener) :
+    ListAdapter<Serie, FavoriteSeriesWithFilterAdapter.SeriesWithFilterViewHolder>(SERIES_COMPARATOR) {
+
+    private var series: List<Serie> = listOf()
 
     inner class SeriesWithFilterViewHolder(private val binding: MovieSerieItemWithFilterLayoutBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(serie: Serie) {
@@ -29,23 +34,23 @@ class SeriesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLong
                     .into(posterImage)
 
                 titleTextView.text = serie.name
-
                 imdbRateTextView.text = (serie.vote_average / 2).toString()
 
                 releaseDate.text = "Release Date: ${serie.first_air_date}"
 
+
                 itemView.setOnClickListener {
-                    onClickListener.onSeriesClicked(getItem(layoutPosition))
+                    onClickListener.onSeriesClicked(series[layoutPosition])
                 }
 
                 itemView.setOnLongClickListener {
                     // Create an alert dialog
                     val builder = AlertDialog.Builder(it.context)
-                        .setTitle("Add This Series To Favorites")
-                        .setMessage("Are you sure you want to add this series to your favorite series list?")
+                        .setTitle("Remove This Series From Favorites")
+                        .setMessage("Are you sure you want to remove this series from your favorite series list?")
                         .setPositiveButton("Confirm") { dialog, _ ->
                             // Notify the interface implementer
-                            onLongClickListener.onSerieAddedToFavorites(getItem(layoutPosition))
+                            onLongClickListener.onSerieRemovedFromFavorites(series[layoutPosition])
                         }
                         .setNegativeButton("Cancel") { dialog, _ ->
                             dialog.dismiss()
@@ -70,14 +75,20 @@ class SeriesWithFilterAdapter(private val onLongClickListener: onMovieSeriesLong
     }
 
     override fun onBindViewHolder(holder: SeriesWithFilterViewHolder, position: Int) {
-        var series = getItem(position)
+        var serie = series[position]
 
-        if(series!=null) holder.bind(series)
+        if(serie!=null) holder.bind(serie)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesWithFilterViewHolder {
         val binding = MovieSerieItemWithFilterLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return SeriesWithFilterViewHolder(binding)
+    }
+    override fun getItemCount(): Int = series.size
+
+    fun setSeries(series: List<Serie>) {
+        this.series = series
+        notifyDataSetChanged()
     }
 }

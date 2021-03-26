@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.miguel.moviesapp.data.Movie
+import com.miguel.moviesapp.ui.filters.MovieFilter
 
 @Dao
 interface MoviesDao {
